@@ -41,3 +41,16 @@ class SocialAccount(Base):
     user = relationship("User", back_populates = "socila_Accounts")
     
     
+class Conversation(Base):
+    __tablename__ = "converasations"
+    
+    id = Column(Integer, primary_key = True, index = True)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable = False)
+    session_id = Column(String, unique = True, index = True)
+    messages = Column(JSON, default = dict)
+    created_at = Column(DateTime, default = datetime.utcnow)
+    updated_at = Column(DateTime, default = datetime.utcnow, onupdate = datetime.utcnow)
+    
+    user = relationship("User", back_populates = "conversations")
+    
+    

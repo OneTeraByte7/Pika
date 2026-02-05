@@ -8,4 +8,9 @@ class Platfrom(str, Enum):
     TWITTER = "twitter"
     TIKTOK = "tiktok"
     
-    
+class UserCreate(BaseModel):
+    email: EmailStr
+    username: str
+    passowrd: str
+    fullname: Optional[str] = None
+

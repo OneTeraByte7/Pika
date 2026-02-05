@@ -51,3 +51,21 @@ class VoiceResponse(BaseModel):
     actions: List[Dict[str, Any]] = []
     
     
+class BriefingRequest(BaseModel):
+    time_range: str = "24h"
+    
+
+class BriefingResponse(BaseModel):
+    summary: str
+    highlights: List[Dict[str, Any]]
+    unread_dms: int
+    top_posts: List[Dict[str, Any]]
+    notifications: List[Dict[str, Any]]
+    
+class PostCreate(BaseModel):
+    platform: List[Platform]
+    content: str
+    media_url: Optional[str] = None
+    media_type: Optional[str] = None
+    
+    

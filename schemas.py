@@ -14,3 +14,15 @@ class UserCreate(BaseModel):
     passowrd: str
     fullname: Optional[str] = None
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+    
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    username: str
+    full_name:Optional[str]
+    is_premiun: bool
+    created_at: datetime
+    

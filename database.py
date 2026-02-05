@@ -22,3 +22,22 @@ class User(Base):
     conversations = relationship("Conversation", back_populates = "user")
     
     
+class SocialAccount(Base):
+    __tablename__ = "social_accounts"
+    
+    id = Column(Integer, primary_key = True, index = True)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable = False)
+    platform = Column(String, nullable = False)
+    platform_user_id = Column(String, nullable = False)
+    username = Column(String)
+    access_token = Column(String, nullable = False)
+    refresh_token = Column(String)
+    token_expires_at = Column(DateTime)
+    is_active = Column(Boolean, default = True)
+    metadata = Column(JSON)
+    created_at = Column(DateTime, default = datetime.utcnow)
+    updates_At = Column(DateTime, default = datetime.utcnow, onupdate = datetime.utcnow)
+    
+    user = relationship("User", back_populates = "socila_Accounts")
+    
+    

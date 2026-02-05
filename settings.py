@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 from typing import Optional
 
 class Settings(BaseSettings):
-    APP__NAME: str = "PIKA AI"
+    APP__NAME: str = "Pika AI"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
     SECRET_KEY: str = ""
@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     
     DATABASE_URL: str = ""
     
-    REDIS_URL: str = ""
+    REDIS_URL: str = "redis://localhost:6379"
     
     INSTAGRAM_CLIENT_ID: Optional[str] = None
     INSTAGRAM_CLIENT_SECRET: Optional[str] = None

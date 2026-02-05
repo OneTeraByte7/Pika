@@ -68,4 +68,18 @@ class PostCreate(BaseModel):
     media_url: Optional[str] = None
     media_type: Optional[str] = None
     
+class PostResponse(BaseModel):
+    success: bool
+    results: Dict[str, Any]
+    message: str
     
+class DMSummary(BaseModel):
+    platform: Platform
+    unread_count: int
+    important_messages: List[Dict[str, Any]]
+    summary: str
+    
+class ActivityFeed(BaseModel):
+    activities: List[Dict[str, Any]]
+    unread_count: int
+    priority_items: List[Dict[str, Any]]

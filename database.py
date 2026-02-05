@@ -53,4 +53,15 @@ class Conversation(Base):
     
     user = relationship("User", back_populates = "conversations")
     
+class Activiry(Base):
+    __tablename__ = "activities"
+    
+    id = Column(Integer, primary_key = True, index = True)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable = False)
+    platform = Column(String, nullable = False)
+    activity_type = Column(String, nullable = False)
+    content = Column(JSON)
+    is_read = Column(Boolean, default = False)
+    priority = Column(Integer, default = 0)
+    created_at = Column(DateTime, default = datetime.utcnow)
     

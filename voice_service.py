@@ -45,3 +45,16 @@ class VoiceService:
         except Exception as e:
             print(f"Error generating speech: {e}")
             return None
+        
+        
+    def speech_to_text(self, audio_data: str) -> Optional[str]:
+        pass
+    
+    async def get_aufio_url(self, text: str) -> Optional[str]:
+        audio_bytes = await self.text_to_speech(text)
+        
+        if audio_bytes:
+            audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+            return f"data:audio/mpeg;base64,{audio_base64}"
+        
+        return None

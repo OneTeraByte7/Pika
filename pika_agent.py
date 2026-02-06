@@ -35,5 +35,26 @@ class PikaAI:
         
         else:
             return self._handle_general_query(user_input, context)
+    
+    def _handle_briefing(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        #generates morning responses
+        activities = context.get("recent_activities", [])
+        dms = context.get("unread_dms", 0)
         
+        response = f"Hey ! Here's what's happening:\n\n"
         
+        if activities:
+            top_activity = activities[0]
+            response += f"{top_activity.get('summary', 'Your frined posted something new !')} \n"
+            
+        if dms > 0:
+            response +=  f" You have {dms} unread DMs \n"
+            
+        response += "\n Want details on anything"
+        
+        return {
+            "intent": "briefing",
+            "response": response,
+            "actions": ["fetch_activities", "fetch_dms"],
+            "require_data": True        
+        }

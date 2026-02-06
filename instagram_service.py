@@ -104,3 +104,23 @@ class InstagramService:
             print(f"Error fetching comments: {e}")
             return []
         
+    
+    async def post_comment(self, media_id: str, text: str) -> Optional[Dict[str,Any]]:
+        
+        url = f"{self.base_url}/{media_id}/comments"
+        
+        params = {
+            "message": text,
+            "access_token": self.access_token 
+        }
+        
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(url, params = params, timeout = 10.0)
+                
+                if response.status_code == 200:
+                    return response.json()
+                return None
+        except Exception as e:
+            print(f"Error posting comment: {e}")
+            return None

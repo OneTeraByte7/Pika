@@ -50,4 +50,36 @@ class InstagramService:
                 print(f"Error fetching recent media: {e}")
                 return []
             
-    
+    async def post_media(self, image_url: str, caption: str) -> Optional[Dict[str, Any]]:
+        
+        create_url = f"{self.base_url}/me/media"
+        create_params = {
+            "image_url": image_url,
+            "caption": caption,
+            "access_token": self.access_token
+        }
+        
+        try:
+            async with httpx.AsyncClient() as client:
+                create_response = await client.post(create_url, params = create_params,timeout = 15.0)
+                
+                if create_response.status_code != 200:
+                    return None
+
+                container_id = create_response.json().get("id")
+                
+                publish_url = f"{self.base_url}/me/media_publish"
+                publish_params = {
+                    "creation_id": container_id,
+                    "access_token": self.access_token
+                }
+                
+                publish_response = await client.post(publish_url, param = publish_params, timeout = 15.0)
+                
+                if publish_response.status_code == 200:
+                    return publish_response.json()
+                return None
+            
+        except Exception as e:
+            print(f"Error posting to Instagram: {e}")
+            return None

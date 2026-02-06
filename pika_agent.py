@@ -58,3 +58,22 @@ class PikaAI:
             "actions": ["fetch_activities", "fetch_dms"],
             "require_data": True        
         }
+        
+    def _handle_post_intent(self, user_input: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        #handles posting content
+        return {
+            "intent": "post",
+            "response": "What would you like to post ? Yon can share photos, videos,!",
+            "actions": ["prepare_post"],
+            "requires_data": False
+        }
+        
+    def _handle_dm_intent(self, user_input: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        #handle dm query
+        
+        return {
+            "intent": "dm_check",
+            "response": "Let me check your message across all platform",
+            "actions": ["fetch_dms", "summarize_dms"],
+            "requires_data": True
+        }

@@ -28,3 +28,26 @@ class InstagramService:
             except Exception as e:
                 print(f"Instagram API eror: {e}")
                 return None 
+            
+        async def get_recent_media(self, limit: int = 10) -> List[Dict[str, Any]]:
+            url = f"{self.base_url}/me/media"
+            params = {
+                "fields": "id, caption, media_type, media_url, thumbnail_url, permalink, timestamp, like_count, comments_count",
+                "limit": limit,
+                "access_token": self.access_token
+            }
+            
+            try:
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(url, params = params, timeout = 10.0)
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        return data.get("data", [])
+                    return []
+                
+            except Exception as e:
+                print(f"Error fetching recent media: {e}")
+                return []
+            
+    

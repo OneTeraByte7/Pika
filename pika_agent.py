@@ -123,4 +123,4 @@ class PikaAI:
             activity_type = activity.get("type", "activity")
             summary_parts.append(f"{activity.get('summary', 'New activity')} on {platform}")
             
-        return " . ".koin(summary_parts)
+        return " . ".join(summary_parts)

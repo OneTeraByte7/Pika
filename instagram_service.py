@@ -83,3 +83,24 @@ class InstagramService:
         except Exception as e:
             print(f"Error posting to Instagram: {e}")
             return None
+        
+    async def get_comments(self, media_id: str) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/{media_id}/comments"
+        params = {
+            "fileds": "id text, username, timestamp",
+            "access_token": self.access_token 
+        }
+        
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, params = params, timeout = 10.0)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    return data.get("data", [])
+                return []
+            
+        except Exception as e:
+            print(f"Error fetching comments: {e}")
+            return []
+        

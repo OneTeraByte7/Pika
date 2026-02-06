@@ -100,3 +100,27 @@ class PikaAI:
             "actions": [],
             "requries_data": False
         }
+        
+    def generate_comment(self, context: str, tone: str = "friendly") -> str:
+        
+        if "engagement" in context.lower() or "engaged" in context.lower():
+            return "OMG Congratulations ! So happy for both of you"
+        
+        elif "birthday" in context.lower():
+            return "Happy birthday!! Hope you have an amazing day!"
+        
+        else :
+            return "Love this !"
+        
+    def summarize_activities(self, activities: List[Dict[str, Any]]) -> str:
+        
+        if not activities:
+            return "Nothing new right one, all quiet !"
+        
+        summary_parts = []
+        for activity in activities[:3]:
+            platform = activity.get("platform", "socila media")
+            activity_type = activity.get("type", "activity")
+            summary_parts.append(f"{activity.get('summary', 'New activity')} on {platform}")
+            
+        return " . ".koin(summary_parts)

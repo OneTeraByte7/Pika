@@ -77,3 +77,26 @@ class PikaAI:
             "actions": ["fetch_dms", "summarize_dms"],
             "requires_data": True
         }
+        
+    def _handle_check_intent(self, user_input: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "intent": "check",
+            "response": "What would you like me to check for you",
+            "actions": ["serach_content"],
+            "requires_data": True
+        }
+        
+    def _handle_comment_intent(self, user_input: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "intent": "comment",
+            "response": "I can help you write a comment! What vibe are you going for ?",
+            "requires_data": False
+        }
+        
+    def _handle_general_query(self, user_input: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "intent": "general",
+            "response": "I'm here to help wiht your socila media ! Try asking me anything",
+            "actions": [],
+            "requries_data": False
+        }

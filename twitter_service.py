@@ -51,3 +51,22 @@ class TwitterService:
         except Exception as e:
             print(f"Error fetching tweets: {e}")    
             return []
+        
+    async def get_dms(self, user_id: str) -> List[Dict[str, Any]]:
+        
+        url = f"{self.base_url}/dm_conversations/with/{user_id}/dm_events"
+        params = {
+            "dm_events.fields": "created_at, text, sender_id",
+            "max_results": 20
+        }
+        
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, params=params, headers=self._get_headers(), timeout=10.0)
+                
+                if response.status_code == 200:
+                    return response.json().get("data", [])
+                return []
+        except Exception as e:
+            print(f"Error fetching DMs: {e}")
+            return []

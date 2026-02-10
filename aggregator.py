@@ -67,3 +67,29 @@ class SocialMediaAggregator:
                 
         return results
     
+    async def get_all_dms(self) -> List[Dict[str, Any]]:
+        
+        all_dms = []
+        
+        return all_dms
+    
+    async def search_across_platforms(self, query: str) -> List[Dict[str, Any]]:
+        results = []
+        
+        return results
+    
+    def _generate_summary(self, briefing: Dict[str, Any]) -> str:
+        
+        summary_parts = []
+        
+        if briefing["top_posts"]:
+            post_count = len(briefing["top_posts"])
+            summary_parts.append(f"You have {post_count} recent posts")
+            
+        if briefing["unread_dms"] > 0:
+            summary_parts.append(f"{briefing['unread_dms']} unread messages")
+            
+        if summary_parts:
+            return " and ".join(summary_parts) + "!"
+        
+        return "All caught up! Nothing new right now"

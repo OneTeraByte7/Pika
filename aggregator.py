@@ -18,4 +18,31 @@ class SocialMediaAggregator:
             elif platform == "twitter" and access_token:
                 self.accounts["twitter"] = TwitterService(access_token)
                 
-    
+    async def get_morning_briefing(self) -> Dict[str, Any]:
+        
+        briefing = {
+            "summary": "",
+            "highlights": [],
+            "unread_dms": 0,
+            "top_posts": [],
+            "notifications": []
+        }
+        
+        if "instagram" in self.accounts:
+            ig_media = await self.accounts["instagram"].get_recent_media(limit = 5)
+            for media in ig_media:
+                briefing["top_posts"].appen({
+                    "platform": "instagram",
+                    "type": media.get("media_type"),
+                    "caption": media.get("caption", "")[:100],
+                    "likes": media.get("like_count", 0),
+                    "comments": media.get("comments_count", 0),
+                    "url": media.get("permalink")
+                })
+                
+        if "twitter" in self.accounts:
+            pass
+        
+        briefing["summary"] = self._generate_summary(briefing)
+        
+        return briefing

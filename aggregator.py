@@ -93,3 +93,26 @@ class SocialMediaAggregator:
             return " and ".join(summary_parts) + "!"
         
         return "All caught up! Nothing new right now"
+    
+    async def get_activity_feed(self, hours: int = 24) -> List[Dict[str, Any]]:
+        
+        activities = []
+        
+        if "instagram" in self.accounts:
+            media = await self.accounts["instagram"].get_recent_media(limit = 10)
+            for item in media:
+                timestamp = item.get("timestamp")
+                if self._is_recent(timestamp, hours):
+                    activities.append({
+                        "platform": "instagram",
+                        "type": "post",
+                        "summary": f"Posted to Instagram: {item.get('caption', '')[:50]}...",
+                        "likes": item.get("like_count", 0),
+                        "timestamp": timestamp
+                    })
+                    
+        activities.sort(key = lambda x: x.get("timestamp", ""), reverse = True)
+        
+        return activities
+    
+    

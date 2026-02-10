@@ -46,3 +46,24 @@ class SocialMediaAggregator:
         briefing["summary"] = self._generate_summary(briefing)
         
         return briefing
+    
+    async def post_to_multiple_platform(self, platforms: List[str], content:str, media_url: str = None) -> Dict[str, Any]:
+        results = {}
+        
+        for platform in platforms:
+            if platform == "instagram" and "instagram" in self.accounts:
+                if media_url:
+                    result = await self.accounts["instagram"].post_media(media_url, content)
+                    result["instagram"] = {
+                        "success": result is not None,
+                        "data": result
+                    }
+            elif platform == "twitter" and "twitter" in self.accounts:
+                result = await self.accounts["twitter"].post_tweet(content)
+                results["twitter"] = {
+                    "success": result is not None,
+                    "data": result
+                }
+                
+        return results
+    

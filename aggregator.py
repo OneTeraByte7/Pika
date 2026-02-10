@@ -115,4 +115,10 @@ class SocialMediaAggregator:
         
         return activities
     
-    
+    def _is_recent(self, timestamp_str: str, hours: int) -> bool:
+        try:
+            timestamp = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
+            cutoff = datetime.utcnow() - timedelta(hours = hours)
+            return timestamp > cutoff
+        except:
+            return False

@@ -66,7 +66,7 @@ async def register(user: UserCreate):
     )
     
 @router.post("/login", response_model = Token)
-async def login(user: USerLogin):
+async def login(user: UserLogin):
     access_token_expires = timedelta(minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data = {"sub": "1"},
@@ -75,3 +75,15 @@ async def login(user: USerLogin):
     
     return Token(sccess_token = access_token)
 
+@router.get("/me", response_model = UserResponse)
+async def get_me(current_user: User = Depends(get_current_user)):
+    
+    return UserResponse(
+        id = current_user.id,
+        email = current_user.email,
+        username = current_user.username,
+        full_name = "Demo User",
+        is_premium = False,
+        created_at = datetime.utcnow()
+        
+    )

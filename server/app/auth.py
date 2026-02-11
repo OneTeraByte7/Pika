@@ -54,4 +54,24 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     
     return User(id = int(user_id), email = 'user@example.com', username = "user")
     
+@router.post("/register", response_model = UserResponse, status_code = status.HTTP_201_CREATED)
+async def register(user: UserCreate):
+    return UserResponse(
+        id = 1,
+        email=user.email,
+        username = user.username,
+        full_name = user.full_name,
+        is_premium = False,
+        created_at = datetime.utcnow()
+    )
     
+@router.post("/login", response_model = Token)
+async def login(user: USerLogin):
+    access_token_expires = timedelta(minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data = {"sub": "1"},
+        expires_delta = access_token_expires
+    )
+    
+    return Token(sccess_token = access_token)
+

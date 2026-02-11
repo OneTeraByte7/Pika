@@ -33,3 +33,25 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encoded(to_encode, settings.SECRET_KEY, algorithm = settings.ALGORITHM)
     
     return encoded_jwt
+
+
+def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
+    credentials_exception = HTTPException(
+        status_code = status.HTTP_401_UNAUTHORIZED,
+        detail = "Could not valudate credentials",
+        headers = {"WWW_Authnticate": "Bearer"},
+    )
+    
+    try:
+        payload = jwt.deocde(token, settings.SECRET_KEY, algorithms = [settings.ALGORITHM])
+        user_id: str = payload.get("sub")
+        
+        if user_id is None:
+            raise credentials_exception
+        
+    except JWTError:
+        raise credentials_exception
+    
+    return User(id = int(user_id), email = 'user@example.com', username = "user")
+    
+    

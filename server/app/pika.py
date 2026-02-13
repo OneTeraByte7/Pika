@@ -47,3 +47,48 @@ async def process_query(
         audio_url = audio_url,
         actions = ai_response.get("actions", [])
     )
+    
+@router.post("/briefing", reponse_model = BriefingResponse)
+async def get_briefing(
+    request: BriefingRequest,
+    current_user: User = Depends(get_current_user)    
+):
+    mock_accounts = []
+    aggregator = SocialMediaAggregator(mock_accounts)
+    
+    briefing = await aggregator.get_morning_briefing()
+    
+    if not briefing["top_posts"]:
+        briefing = {
+            "summary": "Your friend Sarah posted engaged! You have 5 unread DMs",
+            "highlights":[
+                {
+                    "type": "engagement",
+                    "user": "Sarah",
+                    "platform": "instagram",
+                    "description": "Posted engagement photo with ring"
+                }
+            ],
+            
+            "unread_dms": 5,
+            "top_posts": [
+                {
+                    "platform": "instgram",
+                    "user": "Sarah",
+                    "type": "image",
+                    "caption": "He said yes!",
+                    "likes": 47,
+                    "comments": 13
+                }
+            ],
+            "notifications": [
+                {
+                    "type": "like",
+                    "user": "Jake",
+                    "platform": "twitter",
+                    "content": "liked your tweet"
+                }
+            ]
+        }
+        
+    return BriefingResponse(**briefing)

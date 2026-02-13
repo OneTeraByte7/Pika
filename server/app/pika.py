@@ -92,3 +92,22 @@ async def get_briefing(
         }
         
     return BriefingResponse(**briefing)
+
+@router.post("/comment/generate")
+async def generate_comment(
+    context: Dict[str, Any],
+    current_user: User = Depends(get_current_user)
+):
+    comment_text = pika_ai.generate_comment(
+        context.get("post_content", ""),
+        context.get("tone", "friendly")
+    )
+    
+    return{
+        "comment": comment_text,
+        "suggestions": [
+            "This is amazing",
+            "Love this"
+        ]
+    }
+    

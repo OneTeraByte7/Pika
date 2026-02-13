@@ -12,3 +12,17 @@ from services. social_media.aggregator import SocialMediaAggregator
 
 router = APIRouter(prefix = "/social", tags = ["social"])
 
+@router.post("/connect")
+async def connect_platform(
+    account: SocialAccountConnect,
+    current_user: User = Depends(get_current_user)
+):
+    
+    return{
+        "success": True,
+        "platform": account.platform,
+        "username": account.username,
+        "message": f"Successfully connected {account.platform}"
+    }
+    
+    

@@ -111,3 +111,19 @@ async def generate_comment(
         ]
     }
     
+    
+@router.get("/status")
+async def get_pika_status(current_user: User = Depends(get_current_user)):
+    
+    return {
+        "status": "active",
+        "connected_platform": [],
+        "voice_enabled": voice_service.api_key is not None,
+        "features": {
+            "briefing": True,
+            "cross_posting": True,
+            "dm_aggregation": True,
+            "voice_input": True,
+            "voice_input": voice_service.api_key is not None
+        } 
+    }

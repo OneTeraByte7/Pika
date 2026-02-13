@@ -25,4 +25,39 @@ async def connect_platform(
         "message": f"Successfully connected {account.platform}"
     }
     
+@router.get("/accounts")
+async def get_connected_accounts(current_user: User = Depends(get_current_user)):
     
+    return{
+        "accounts": [
+            {
+                "platform": "instagram",
+                "username": "@demo_user",
+                "connected_at": "2024-01-15T10:00:00Z",
+                "is_active": True
+            }
+        ]
+    }
+    
+@router.post("/post", response_model = PostResponse)
+async def create_post(
+    post: PostCreate,
+    current_user: User = Depends(get_current_user)
+):
+    
+    mock_accounts = []
+    aggregator = SocialMediaAggregator(mock_accounts)
+    
+    results = {}
+    for platform in post.platform:
+        results[platform] = {
+            "success": True,
+            "post_id": f"mock_{platform}_123",
+            "url": f"https://{platform}.com/post/123"
+        }
+        
+    return PostResponse(
+        success = True,
+        results = results,
+        message = f"Posted to {len(post.platforms)} platforms successfully"
+    )

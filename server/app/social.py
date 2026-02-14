@@ -127,4 +127,11 @@ async def get_activity_feed(
 async def disconnect_platform(
     platform: Platform,
     current_user: User = Depends(get_current_user)
-)
+):
+    
+    return{
+        "success": True,
+        "platform": platform,
+        "message": f"Disconnected {platform} successfully"
+    }
+    

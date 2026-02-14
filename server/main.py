@@ -33,3 +33,19 @@ app.include_router(auth.router)
 app.include_router(pika.router)
 app.include_router(social.router)
 
+@app.get("/")
+async def root():
+    return {
+        "app": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+        "status": "active",
+        "message": "Hey! I'm Pika, your voice-first social media AI agent"
+    }
+    
+app.get("/health")
+async def health_check():
+    return{
+        "status": "healthy",
+        "timestamp": "2024-01-20T12:00:00Z"
+    }
+    

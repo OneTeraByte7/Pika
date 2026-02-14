@@ -61,3 +61,34 @@ async def create_post(
         results = results,
         message = f"Posted to {len(post.platforms)} platforms successfully"
     )
+    
+@router.get("/dms", response_model = List[DMSummary])
+async def get_dms(current_user: User = Depends(get_current_user)):
+    
+    return [
+        DMSummary(
+            platform = Platform.INSTAGRAM,
+            unread_count = 3,
+            important_messages = [
+                {
+                    "from": "Sarah",
+                    "preview": "Hey! Did you see my post",
+                    "timestamp": "2 hous ago"
+                }
+            ],
+            summary = "3 unread messages on Instagram"
+        ),
+        DMSummary(
+            platform = Platform.TWITTER,
+            unread_count = 2,
+            important_messages = [
+                {
+                    "from": "Jake",
+                    "preview": "Thanks for the RT!",
+                    'timestamp': "1 hour ago"
+                }
+            ],
+            
+            summary = "2 unread messages on Twitter"
+        )
+    ]

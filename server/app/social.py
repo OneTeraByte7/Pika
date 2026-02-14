@@ -92,3 +92,39 @@ async def get_dms(current_user: User = Depends(get_current_user)):
             summary = "2 unread messages on Twitter"
         )
     ]
+    
+@router.get("/activity", response_model = ActivityFeed)
+async def get_activity_feed(
+    hours: int = 24,
+    current_user: User = Depends(get_current_user)
+):
+    activities = [
+        {
+            "id": 1,
+            "platform": "instagram",
+            "type": "like",
+            "content": "Jake liked your photo",
+            "timestamp": "1 hour ago",
+            "is_read": False
+        },
+        {
+            "id": 2,
+            "platform": "twiiter",
+            "type": "retweet",
+            "content": "Emma retweeted your tweet",
+            "timestamp": "3 hours ago",
+            "is_read": False
+        }
+    ]
+    
+    return ActivityFeed(
+        activities = activities,
+        unread_count = 2,
+        priority_items = [activities[0]]
+    )
+    
+@router.post("/disconnect/{platform}")
+async def disconnect_platform(
+    platform: Platform,
+    current_user: User = Depends(get_current_user)
+)

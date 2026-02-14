@@ -21,3 +21,15 @@ app = FastAPI(
     lifespan = lifespan
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = settings.CORS_ORIGINS,
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
+
+app.include_router(auth.router)
+app.include_router(pika.router)
+app.include_router(social.router)
+

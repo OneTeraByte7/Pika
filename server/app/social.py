@@ -135,3 +135,22 @@ async def disconnect_platform(
         "message": f"Disconnected {platform} successfully"
     }
     
+@router.get("/search")
+async def search_content(
+    query: str,
+    platform: List[Platform] = None,
+    current_user: User = Depends(get_current_user)
+):
+    
+    return{
+        "query": query,
+        "results": [
+            {
+                "platform": "instagram",
+                "type": "post",
+                "user":"Sarah",
+                "content":"Beach Day !",
+                "url": "hhtps://instagram.com/p/123"
+            }
+        ]
+    }

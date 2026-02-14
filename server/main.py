@@ -49,3 +49,12 @@ async def health_check():
         "timestamp": "2024-01-20T12:00:00Z"
     }
     
+if __name__ == "__main__":
+    import uvicorn
+    
+    uvicorn.run(
+        "main:app",
+        host = "0.0.0.0",
+        port = 8000,
+        reload = settings.DEBUG
+    )

@@ -34,7 +34,7 @@ class SocialAccount(Base):
     refresh_token = Column(String)
     token_expires_at = Column(DateTime)
     is_active = Column(Boolean, default = True)
-    metadata = Column(JSON)
+    meta_data = Column("metadata", JSON)
     created_at = Column(DateTime, default = datetime.utcnow)
     updates_At = Column(DateTime, default = datetime.utcnow, onupdate = datetime.utcnow)
     

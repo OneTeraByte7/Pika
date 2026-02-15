@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Dict, Any
-from models.schemas import VoiceQuery, VoiceResponse, BriefingRequest, BriefingResponse
-from models.database import User
-from app.auth import get_current_user
-from services.ai.pika_agent import PikaAI
-from services.voice.voice_service import VoiceService
-from services.social_media.aggregator import SocialMediaAggregator
+from server.models.schemas import VoiceQuery, VoiceResponse, BriefingRequest, BriefingResponse
+from server.models.database import User
+from server.app.auth import get_current_user
+from server.services.ai.pika_agent import PikaAI
+from server.services.voice.voice_service import VoiceService
+from server.services.social_media.aggregator import SocialMediaAggregator
 
 router = APIRouter(prefix = "/pika", tags = ["pika"])
 

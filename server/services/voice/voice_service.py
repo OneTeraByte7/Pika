@@ -1,7 +1,7 @@
 import httpx
 from typing import Optional
 import base64
-from config.settings import settings
+from server.config.settings import settings
 
 class VoiceService:
     def __init__(self):

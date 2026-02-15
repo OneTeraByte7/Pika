@@ -16,7 +16,7 @@ class User(Base):
     is_active = Column(Boolean, default = True)
     is_premium = Column(Boolean, default = False)
     created_at = Column(DateTime, default = datetime.utcnow)
-    updates_at = Column(DateTime, defult = datetime.utcnow, onupdate = datetime.utcnow)
+    updates_at = Column(DateTime, default = datetime.utcnow, onupdate = datetime.utcnow)
     
     social_accounts = relationship("SocialAccount", back_populates = "user")
     conversations = relationship("Conversation", back_populates = "user")

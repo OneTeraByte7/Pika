@@ -2,12 +2,12 @@ from pydantic_settings import BaseSettings
 from typing import Optional
 
 class Settings(BaseSettings):
-    APP__NAME: str = "Pika AI"
+    APP_NAME: str = "Pika AI"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
     SECRET_KEY: str = ""
     ALGORITHM: str = "HS256"
-    ACCES_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     DATABASE_URL: str = ""
     
@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: Optional[str] = None
     HUGGINGFACE_TOKEN: Optional[str] = None
     
-    CORS_ORIGINS: list = ["http:localhost:3000" "http://localhost:3001"]
+    CORS_ORIGINS: list = ["http://localhost:3000", "http://localhost:3001"]
     
     class Config:
         env_file = ".env"

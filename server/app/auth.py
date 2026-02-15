@@ -12,7 +12,7 @@ from server.config.settings import settings
 router = APIRouter(prefix = "/auth", tags = ["authentication"])
 
 pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
-oauth2_scheme = OAuth2PasswordBearer(toeknUrl = "auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "/auth/login")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
@@ -30,7 +30,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
         expire = datetime.utcnow() + timedelta(minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encoded(to_encode, settings.SECRET_KEY, algorithm = settings.ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm = settings.ALGORITHM)
     
     return encoded_jwt
 
@@ -38,12 +38,12 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     credentials_exception = HTTPException(
         status_code = status.HTTP_401_UNAUTHORIZED,
-        detail = "Could not valudate credentials",
-        headers = {"WWW_Authnticate": "Bearer"},
+        detail = "Could not validate credentials",
+        headers = {"WWW-Authenticate": "Bearer"},
     )
     
     try:
-        payload = jwt.deocde(token, settings.SECRET_KEY, algorithms = [settings.ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms = [settings.ALGORITHM])
         user_id: str = payload.get("sub")
         
         if user_id is None:
@@ -72,8 +72,8 @@ async def login(user: UserLogin):
         data = {"sub": "1"},
         expires_delta = access_token_expires
     )
-    
-    return Token(sccess_token = access_token)
+
+    return Token(access_token = access_token)
 
 @router.get("/me", response_model = UserResponse)
 async def get_me(current_user: User = Depends(get_current_user)):

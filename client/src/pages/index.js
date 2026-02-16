@@ -41,3 +41,25 @@ export const usePikaStore = create((set) => ({
         response: null
     }),
 }));
+
+export const useSocialStore = create((set) => ({
+    accounts: [],
+    activities: [],
+    dms: [],
+    unreadCount: 0,
+
+    setAccounts: (accounts) => set({accounts}),
+    setActivities: (activities) => set({activities}),
+    setDMs: (dms) => {
+        const unreadCount = dms.reduce((sum, dm) => sum + dm.unread_count, 0);
+        set({ dms, unreadCount});
+    },
+
+    addAccount: (account) => set((state) => ({
+        account: [...state.accounts, account]
+    })),
+
+    removeAccount: (platform) => set((set) => ({
+        accounts: state.accounts.filter(acc => acc.platform !== platform)
+    })),
+}));

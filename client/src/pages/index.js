@@ -22,3 +22,22 @@ export const useAuthStore = create((set) => ({
         }
     },
 }));
+
+export const usePikaStore = create((set) => ({
+    isListening: false,
+    currentQuery: '',
+    response:null,
+    briefing: null,
+    connectionPlatforms:[],
+
+    setListening: (isListening) => set({isListening}),
+    setCurrentQuery: (query) => set({ currentQuery: query}),
+    setResponse: (response) => set({response}),
+    setBriefing: (briefing) => set({briefing}),
+    setConnectedPlatform: (platform) => set({ connectedPlatform: platform}),
+
+    resetCOnversation: () => set({
+        currentQuery: '',
+        response: null
+    }),
+}));

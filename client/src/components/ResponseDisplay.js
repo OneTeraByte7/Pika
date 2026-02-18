@@ -1,6 +1,6 @@
 import { motion} from 'framer-motion';
 import { MessageCircle, ThumbsUp, Send } from 'lucide-react';
-import { UsePikaStore } from '../store';
+import { usePikaStore } from '../store';
 
 export default function ResponseDisplay()
 {

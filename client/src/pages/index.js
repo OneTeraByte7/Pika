@@ -1,4 +1,4 @@
-import { useEffect, useStore } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Sparkles, Menu, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';

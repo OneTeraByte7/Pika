@@ -48,7 +48,7 @@ async def process_query(
         actions = ai_response.get("actions", [])
     )
     
-@router.post("/briefing", reponse_model = BriefingResponse)
+@router.post("/briefing", response_model = BriefingResponse)
 async def get_briefing(
     request: BriefingRequest,
     current_user: User = Depends(get_current_user)    

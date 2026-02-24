@@ -5,15 +5,15 @@ from server.config.settings import settings
 
 class VoiceService:
     def __init__(self):
-        self.api.key = settings.ELEVENLABS_API_KEY
-        self.voice.id = "21m00Tcm4TlvDq8ikWAM"
+        self.api_key = settings.ELEVENLABS_API_KEY
+        self.voice_id = "UgBBYS2sOqTuMpoF3BR0"
         self.base_url = "https://api.elevenlabs.io/v1"
         
     async def text_to_speech(self, text: str) -> Optional[bytes]:
         if not self.api_key:
             return None
         
-        url = f"{self.base_url}/text-to_speech/{self.voice_id}"
+        url = f"{self.base_url}/text-to-speech/{self.voice_id}"
         
         headers = {
             "Accept": "audio/mpeg",
@@ -34,7 +34,7 @@ class VoiceService:
         
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json=data, header = headers, timeout = 30.0)
+                response = await client.post(url, json=data, headers=headers, timeout=30.0)
                 
                 if response.status_code == 200:
                     return response.content
@@ -50,7 +50,7 @@ class VoiceService:
     def speech_to_text(self, audio_data: str) -> Optional[str]:
         pass
     
-    async def get_aufio_url(self, text: str) -> Optional[str]:
+    async def get_audio_url(self, text: str) -> Optional[str]:
         audio_bytes = await self.text_to_speech(text)
         
         if audio_bytes:

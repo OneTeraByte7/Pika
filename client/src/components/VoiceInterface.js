@@ -26,7 +26,8 @@ export default function VoiceInterface() {
                 setIsProcessing(true);
 
                 try{
-                    const response = await pikaAPI.query({text: transcript});
+                  const session_id = `local-${Date.now()}`;
+                  const response = await pikaAPI.query({ text: transcript, session_id });
                     setResponse(response.data);
 
                     if(response.data.audio_url) {
@@ -44,8 +45,8 @@ export default function VoiceInterface() {
             },
 
             (error) => {
-                toast.error('Voice error: ${error}');
-                setListening(false);
+              toast.error(`Voice error: ${error}`);
+              setListening(false);
             }
         );
     };

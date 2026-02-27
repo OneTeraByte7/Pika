@@ -12,7 +12,7 @@ from server.config.settings import settings
 router = APIRouter(prefix = "/auth", tags = ["authentication"])
 
 pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "/auth/login", auto_error=False)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
@@ -36,6 +36,11 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
+    # If no token provided (or token is empty/invalid string) and we're in DEBUG,
+    # return a demo user for local testing
+    if (not token or token in ("null", "undefined", "")) and settings.DEBUG:
+        return User(id=1, email='user@example.com', username='demo')
+
     credentials_exception = HTTPException(
         status_code = status.HTTP_401_UNAUTHORIZED,
         detail = "Could not validate credentials",

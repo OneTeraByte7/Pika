@@ -1,22 +1,27 @@
 from typing import List, Dict, Any
 from .instagram_service import InstagramService
 from .twitter_service import TwitterService
+from server.services.voice.voice_service import VoiceService
 from datetime import datetime, timedelta
 
 class SocialMediaAggregator:
     
     def __init__(self, user_accounts: List[Dict[str, Any]]):
         self.accounts = {}
-        
+        self.account_meta = {}
+
         for account in user_accounts:
             platform = account.get("platform")
             access_token = account.get("access_token")
-            
+            user_id = account.get("user_id")
+
             if platform == "instagram" and access_token:
-                self.accounts["instgram"] = InstagramService(access_token)
-            
+                self.accounts["instagram"] = InstagramService(access_token)
+                self.account_meta["instagram"] = {"user_id": user_id}
+
             elif platform == "twitter" and access_token:
                 self.accounts["twitter"] = TwitterService(access_token)
+                self.account_meta["twitter"] = {"user_id": user_id}
                 
     async def get_morning_briefing(self) -> Dict[str, Any]:
         
@@ -29,9 +34,9 @@ class SocialMediaAggregator:
         }
         
         if "instagram" in self.accounts:
-            ig_media = await self.accounts["instagram"].get_recent_media(limit = 5)
+            ig_media = await self.accounts["instagram"].get_recent_media(limit=5)
             for media in ig_media:
-                briefing["top_posts"].appen({
+                briefing["top_posts"].append({
                     "platform": "instagram",
                     "type": media.get("media_type"),
                     "caption": media.get("caption", "")[:100],
@@ -39,9 +44,21 @@ class SocialMediaAggregator:
                     "comments": media.get("comments_count", 0),
                     "url": media.get("permalink")
                 })
-                
+
         if "twitter" in self.accounts:
-            pass
+            user_id = self.account_meta.get("twitter", {}).get("user_id")
+            if user_id:
+                tweets = await self.accounts["twitter"].get_user_tweets(user_id, max_results=5)
+                for t in tweets:
+                    briefing["top_posts"].append({
+                        "platform": "twitter",
+                        "type": "tweet",
+                        "user": t.get("author_id"),
+                        "text": t.get("text", "")[:200],
+                        "likes": t.get("public_metrics", {}).get("like_count", 0),
+                        "retweets": t.get("public_metrics", {}).get("retweet_count", 0),
+                        "url": None
+                    })
         
         briefing["summary"] = self._generate_summary(briefing)
         
@@ -49,7 +66,9 @@ class SocialMediaAggregator:
     
     async def post_to_multiple_platform(self, platforms: List[str], content:str, media_url: str = None) -> Dict[str, Any]:
         results = {}
-        
+        voice_service = VoiceService()
+        include_tts = voice_service.api_key is not None
+
         for platform in platforms:
             if platform == "instagram" and "instagram" in self.accounts:
                 if media_url:
@@ -59,10 +78,18 @@ class SocialMediaAggregator:
                         "data": result
                     }
             elif platform == "twitter" and "twitter" in self.accounts:
-                result = await self.accounts["twitter"].post_tweet(content)
+                if include_tts:
+                    # Generate TTS audio and include a note in the tweet text (media upload not implemented)
+                    audio_url = await voice_service.get_audio_url(content)
+                    tweet_text = f"{content}\n\n(Audio preview): {audio_url if audio_url else ''}"
+                else:
+                    tweet_text = content
+
+                result = await self.accounts["twitter"].post_tweet(tweet_text)
                 results["twitter"] = {
                     "success": result is not None,
-                    "data": result
+                    "data": result,
+                    "audio_included": include_tts
                 }
                 
         return results

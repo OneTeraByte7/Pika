@@ -20,7 +20,7 @@ class TwitterService:
         
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, params = params, header = self._get_headers(),timeout = 10.0)
+                response = await client.get(url, params=params, headers=self._get_headers(), timeout=10.0)
                 
                 if response.status_code == 200:
                     return response.json().get("data")
@@ -42,7 +42,7 @@ class TwitterService:
         
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, params = params, header = self._get_header(), timeout = 10.0)
+                response = await client.get(url, params=params, headers=self._get_headers(), timeout=10.0)
                 
                 if response.status_code == 200:
                     return response.json().get("data", [])
@@ -70,3 +70,19 @@ class TwitterService:
         except Exception as e:
             print(f"Error fetching DMs: {e}")
             return []
+
+    async def post_tweet(self, text: str) -> Optional[Dict[str, Any]]:
+        """Create a new Tweet with the given text. Note: requires user-scoped token with write permissions."""
+        url = f"{self.base_url}/tweets"
+        payload = {"text": text}
+
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(url, json=payload, headers=self._get_headers(), timeout=10.0)
+                if response.status_code in (200, 201):
+                    return response.json()
+                print(f"Twitter post error: {response.status_code} {response.text}")
+                return None
+        except Exception as e:
+            print(f"Error posting tweet: {e}")
+            return None

@@ -19,13 +19,13 @@ class PikaAI:
         user_input_lower = user_input.lower() 
         
         if any(word in user_input_lower for word in ["what's up", "whats up", "what up", "sup", "briefing"]):
-            return self._hadle_breifing(context)
-        
+            return self._handle_briefing(context)
+
         elif any(word in user_input_lower for word in ["post", "share", "upload"]):
-            return self._handle_post(user_input, context)
-        
+            return self._handle_post_intent(user_input, context)
+
         elif any(word in user_input_lower for word in ["dm", "message", "messages"]):
-            return self._handle_dm_inetnet(user_input, context)
+            return self._handle_dm_intent(user_input, context)
         
         elif any(word in user_input_lower for word in ["check", "look", " see", "show"]):
             return self._handle_check_intent(user_input, context)
@@ -55,8 +55,11 @@ class PikaAI:
         return {
             "intent": "briefing",
             "response": response,
-            "actions": ["fetch_activities", "fetch_dms"],
-            "require_data": True        
+            "actions": [
+                {"action": "fetch_activities"},
+                {"action": "fetch_dms"}
+            ],
+            "require_data": True
         }
         
     def _handle_post_intent(self, user_input: str, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -64,7 +67,7 @@ class PikaAI:
         return {
             "intent": "post",
             "response": "What would you like to post ? Yon can share photos, videos,!",
-            "actions": ["prepare_post"],
+            "actions": [{"action": "prepare_post"}],
             "requires_data": False
         }
         
@@ -74,7 +77,10 @@ class PikaAI:
         return {
             "intent": "dm_check",
             "response": "Let me check your message across all platform",
-            "actions": ["fetch_dms", "summarize_dms"],
+            "actions": [
+                {"action": "fetch_dms"},
+                {"action": "summarize_dms"}
+            ],
             "requires_data": True
         }
         
@@ -82,7 +88,7 @@ class PikaAI:
         return {
             "intent": "check",
             "response": "What would you like me to check for you",
-            "actions": ["serach_content"],
+            "actions": [{"action": "search_content"}],
             "requires_data": True
         }
         

@@ -1,7 +1,7 @@
 {
-  "name": "Pika - Voice Social AI",
+  "name": "Pika - Voice AI Social Agent",
   "short_name": "Pika",
-  "description": "Your voice-first social media AI agent",
+  "description": "Manage all your social media platforms with just your voice",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#667eea",
@@ -27,6 +27,22 @@
       "src": "/screenshot1.png",
       "sizes": "1280x720",
       "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Talk to Pika",
+      "short_name": "Voice",
+      "description": "Start voice conversation",
+      "url": "/app",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Morning Brief",
+      "short_name": "Brief",
+      "description": "View your daily briefing",
+      "url": "/app",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

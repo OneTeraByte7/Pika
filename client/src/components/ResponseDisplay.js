@@ -38,7 +38,7 @@ export default function ResponseDisplay()
                 key={index}
                 className="px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                {action}
+                {typeof action === 'string' ? action : action.action || JSON.stringify(action)}
               </button>
             ))}
           </div>

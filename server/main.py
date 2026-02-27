@@ -30,12 +30,22 @@ app = FastAPI(
     lifespan = lifespan
 )
 
+import json
+
+# Ensure CORS origins is a list (env may provide a JSON string)
+cors_origins = settings.CORS_ORIGINS
+if isinstance(cors_origins, str):
+    try:
+        cors_origins = json.loads(cors_origins)
+    except Exception:
+        cors_origins = [cors_origins]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = settings.CORS_ORIGINS,
-    allow_credentials = True,
-    allow_methods = ["*"],
-    allow_headers = ["*"],
+    allow_origins=cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(auth.router)

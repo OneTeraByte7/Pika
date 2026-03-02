@@ -2,7 +2,7 @@ const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development'
+  disable: false
 })
 
 /** @type {import('next').NextConfig} */
@@ -12,6 +12,7 @@ const nextConfig = {
   images: {
     domains: ['localhost', 'api.pika.ai'],
   },
+  allowedDevOrigins: ['192.168.1.7'],
 }
 
 module.exports = withPWA(nextConfig)

@@ -12,17 +12,17 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from analytics_service import AnalyticsService, MetricType
-from content_scheduler import ContentScheduler, ScheduleStatus, PostFrequency
-from sentiment_analyzer import SentimentAnalyzer, SentimentLabel
-from notification_manager import NotificationManager, NotificationPriority, NotificationType
-from media_processor import MediaProcessor, MediaType
-from cache_manager import CacheManager, SocialMediaCache
-from data_exporter import DataExporter, ExportFormat
-from task_manager import TaskQueue, TaskPriority, ScheduledTaskManager
-from webhook_handler import WebhookHandler, WebhookEvent
-from content_recommender import ContentRecommender
-from engagement_tracker import EngagementTracker, EngagementType, RetentionAnalyzer
+from services.analytics import AnalyticsService, MetricType
+from services.scheduler import ContentScheduler, ScheduleStatus, PostFrequency
+from services.sentiment import SentimentAnalyzer, SentimentLabel
+from services.notifications import NotificationManager, NotificationPriority, NotificationType
+from services.media import MediaProcessor, MediaType
+from services.caching import CacheManager, SocialMediaCache
+from services.export import DataExporter, ExportFormat
+from services.tasks import TaskQueue, TaskPriority, ScheduledTaskManager
+from services.webhooks import WebhookHandler, WebhookEvent
+from services.recommendations import ContentRecommender
+from services.engagement import EngagementTracker, EngagementType, RetentionAnalyzer
 
 
 router = APIRouter(prefix="/advanced", tags=["advanced_features"])

@@ -349,7 +349,7 @@ pika/
 
 ```bash
 # .env file
-DATABASE_URL=mongodb+srv://user:pass@cluster.mongodb.net/
+DATABASE_URL=""
 REDIS_URL=redis://localhost:6379
 SECRET_KEY=your-secret-key
 

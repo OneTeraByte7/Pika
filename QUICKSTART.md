@@ -93,7 +93,7 @@ Fix the MongoDB connection string in `.env`:
 
 ```bash
 # Replace # with %23 in password
-DATABASE_URL=mongodb+srv://suryawanshisoham7:Soham%401505%2317@linkedin.sgr62ki.mongodb.net/?appName=LinkedIn
+DATABASE_URL=""
 ```
 
 ### Step 6: Run the Server

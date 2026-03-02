@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-
+from server.app.advanced_features_api import router as advanced_router
 # Ensure project root is on sys.path so `server.*` imports work
 # when running this file directly from `server/`.
 ROOT = Path(__file__).resolve().parent.parent
@@ -51,6 +51,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(pika.router)
 app.include_router(social.router)
+app.include_router(advanced_router)
 
 @app.get("/")
 async def root():

@@ -45,3 +45,4 @@ pip-delete-this-directory.txt
 
 client/node_modules/
 client/.next/
+/client/public/*.js.map

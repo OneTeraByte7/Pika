@@ -14,13 +14,17 @@ from contextlib import asynccontextmanager
 
 from server.config.settings import settings
 from server.app import auth, pika, social
+from server.models.mongodb import MongoDB
+from server.middleware.request_logger import RequestLoggerMiddleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Pike AI Backend Starting")
     print(f"API Version: {settings.APP_VERSION}")
     print(f"Debug Mode: {settings.DEBUG}")
+    await MongoDB.connect_db()
     yield
+    await MongoDB.close_db()
     print("Pika AI Backend Shutting Down")
     
 app = FastAPI(
@@ -47,6 +51,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add request logging middleware
+app.add_middleware(RequestLoggerMiddleware)
 
 app.include_router(auth.router)
 app.include_router(pika.router)

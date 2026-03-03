@@ -11,7 +11,7 @@ class Platform(str, Enum):
 class UserCreate(BaseModel):
     email: EmailStr
     username: str
-    passowrd: str
+    password: str
     fullname: Optional[str] = None
 
 class UserLogin(BaseModel):
@@ -19,7 +19,7 @@ class UserLogin(BaseModel):
     password: str
     
 class UserResponse(BaseModel):
-    id: int
+    id: str
     email: str
     username: str
     full_name:Optional[str]

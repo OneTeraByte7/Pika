@@ -1,5 +1,10 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
+from pathlib import Path
+
+# Get the directory where this file is located
+BASE_DIR = Path(__file__).resolve().parent.parent
+ENV_FILE = BASE_DIR / ".env"
 
 class Settings(BaseSettings):
     APP_NAME: str = "Pika AI"
@@ -27,8 +32,14 @@ class Settings(BaseSettings):
     
     CORS_ORIGINS: list = ["http://localhost:3000", "http://localhost:3001"]
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
-    
+    model_config = SettingsConfigDict(
+        env_file=str(ENV_FILE),
+        env_file_encoding='utf-8',
+        case_sensitive=True,
+        extra='ignore'
+    )
+
+print(f"Loading settings from: {ENV_FILE}")
+print(f".env file exists: {ENV_FILE.exists()}")
 settings = Settings()
+print(f"DATABASE_URL loaded: {settings.DATABASE_URL[:50] if settings.DATABASE_URL else 'NOT SET'}...")

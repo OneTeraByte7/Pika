@@ -1,25 +1,42 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import { Sparkles, Home, MessageSquare, PlusCircle, BarChart3, User, Settings, Menu } from 'lucide-react';
+import { Sparkles, Home, MessageSquare, PlusCircle, BarChart3, User, Settings, Menu, Calendar, Bell, Lightbulb, Download, Activity, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import VoiceInterface from '../components/VoiceInterface';
 import ResponseDisplay from '../components/ResponseDisplay';
 import BriefingCard from '../components/BriefingCard';
 import Dashboard from '../components/Dashboard';
+import AnalyticsDashboard from '../components/AnalyticsDashboard';
+import ContentScheduler from '../components/ContentScheduler';
+import NotificationsCenter from '../components/NotificationsCenter';
+import RecommendationsPage from '../components/RecommendationsPage';
+import DataExport from '../components/DataExport';
+import EngagementTracker from '../components/EngagementTracker';
+import SentimentAnalysis from '../components/SentimentAnalysis';
 import { usePikaStore } from '../store';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('pika');
   const [showBriefing, setShowBriefing] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const { briefing } = usePikaStore();
 
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'dms', label: 'DMs', icon: MessageSquare },
     { id: 'pika', label: 'Pika', icon: Sparkles, isPrimary: true },
-    { id: 'post', label: 'Post', icon: PlusCircle },
     { id: 'analytics', label: 'Stats', icon: BarChart3 },
+  ];
+
+  const moreMenuItems = [
+    { id: 'scheduler', label: 'Scheduler', icon: Calendar },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'recommendations', label: 'AI Ideas', icon: Lightbulb },
+    { id: 'sentiment', label: 'Sentiment AI', icon: Brain },
+    { id: 'engagement', label: 'Engagement', icon: Activity },
+    { id: 'export', label: 'Export Data', icon: Download },
+    { id: 'dms', label: 'DMs', icon: MessageSquare },
+    { id: 'post', label: 'Post', icon: PlusCircle },
   ];
 
   const renderContent = () => {
@@ -67,19 +84,19 @@ export default function App() {
           </div>
         );
       case 'analytics':
-        return (
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-              <BarChart3 className="w-16 h-16 mx-auto mb-4 text-purple-600" />
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                Analytics Dashboard
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Detailed insights across all your platforms
-              </p>
-            </div>
-          </div>
-        );
+        return <AnalyticsDashboard />;
+      case 'scheduler':
+        return <ContentScheduler />;
+      case 'notifications':
+        return <NotificationsCenter />;
+      case 'recommendations':
+        return <RecommendationsPage />;
+      case 'sentiment':
+        return <SentimentAnalysis />;
+      case 'engagement':
+        return <EngagementTracker />;
+      case 'export':
+        return <DataExport />;
       default:
         return null;
     }
@@ -124,9 +141,63 @@ export default function App() {
                   {showBriefing ? 'Chat' : "What's Up?"}
                 </button>
               )}
-              <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
-                <Settings className="w-6 h-6 text-gray-600 dark:text-gray-400" />
-              </button>
+              <div className="relative">
+                <button 
+                  onClick={() => setShowMoreMenu(!showMoreMenu)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+                >
+                  <Menu className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                </button>
+                
+                <AnimatePresence>
+                  {showMoreMenu && (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-40"
+                        onClick={() => setShowMoreMenu(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                        className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
+                      >
+                        {moreMenuItems.map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <button
+                              key={item.id}
+                              onClick={() => {
+                                setActiveTab(item.id);
+                                setShowMoreMenu(false);
+                              }}
+                              className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                                activeTab === item.id ? 'bg-purple-50 dark:bg-purple-900/20' : ''
+                              }`}
+                            >
+                              <Icon className={`w-5 h-5 ${
+                                activeTab === item.id 
+                                  ? 'text-purple-600 dark:text-purple-400' 
+                                  : 'text-gray-600 dark:text-gray-400'
+                              }`} />
+                              <span className={`font-medium ${
+                                activeTab === item.id 
+                                  ? 'text-purple-600 dark:text-purple-400' 
+                                  : 'text-gray-900 dark:text-white'
+                              }`}>
+                                {item.label}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </header>

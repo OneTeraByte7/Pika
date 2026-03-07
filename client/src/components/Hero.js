@@ -16,15 +16,15 @@ export default function Hero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center px-4 py-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mb-6">
-              <Sparkles className="w-4 h-4 text-purple-600 mr-2" />
-              <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">
+            <div className="inline-flex items-center px-4 py-2 bg-royal-100 dark:bg-royal-900/30 rounded-full mb-6 border border-gold-400/20">
+              <Sparkles className="w-4 h-4 text-royal-600 mr-2" />
+              <span className="text-sm font-semibold text-royal-600 dark:text-royal-400">
                 Voice-First AI Agent
               </span>
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-royal bg-clip-text text-transparent">
                 Social media,
               </span>
               <br />
@@ -43,7 +43,7 @@ export default function Hero() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
+                  className="px-8 py-4 bg-gradient-royal text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-all border border-gold-400/30"
                 >
                   Start Talking
                 </motion.button>
@@ -52,7 +52,7 @@ export default function Hero() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700"
+                  className="px-8 py-4 bg-white/90 dark:bg-navy-800/90 text-gray-900 dark:text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all border border-gold-400/30 backdrop-blur-sm"
                 >
                   See Demo
                 </motion.button>
@@ -94,10 +94,10 @@ export default function Hero() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute top-0 left-0 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-700"
+              className="absolute top-0 left-0 w-64 bg-white/90 dark:bg-gradient-to-br dark:from-navy-800/90 dark:to-purple-900/90 rounded-2xl shadow-2xl p-6 border border-gold-400/30 backdrop-blur-sm"
             >
               <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full" />
+                <div className="w-10 h-10 bg-gradient-royal rounded-full" />
                 <div className="ml-3">
                   <p className="font-semibold text-gray-900 dark:text-white">Sarah Chen</p>
                   <p className="text-xs text-gray-500">@sarahc</p>
@@ -120,7 +120,7 @@ export default function Hero() {
                 ease: "easeInOut",
                 delay: 1,
               }}
-              className="absolute top-32 right-0 w-72 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-2xl p-6 text-white"
+              className="absolute top-32 right-0 w-72 bg-gradient-royal rounded-2xl shadow-2xl p-6 text-white border border-gold-400/30"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold text-lg">Your Morning Brief</h3>
@@ -148,23 +148,23 @@ export default function Hero() {
                 ease: "easeInOut",
                 delay: 2,
               }}
-              className="absolute bottom-0 left-12 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-5 border border-gray-100 dark:border-gray-700"
+              className="absolute bottom-0 left-12 w-56 bg-white/90 dark:bg-gradient-to-br dark:from-navy-800/90 dark:to-purple-900/90 rounded-2xl shadow-2xl p-5 border border-gold-400/30 backdrop-blur-sm"
             >
               <div className="flex items-center space-x-3 mb-3">
-                <div className="w-12 h-12 bg-gradient-pika rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-royal rounded-full flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <p className="font-bold text-gray-900 dark:text-white">Pika AI</p>
-                  <p className="text-xs text-gray-500">Voice Assistant</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Voice Assistant</p>
                 </div>
               </div>
               <div className="flex space-x-1">
-                <div className="w-1 h-8 bg-purple-400 rounded-full voice-wave" style={{ animationDelay: '0s' }} />
-                <div className="w-1 h-8 bg-purple-400 rounded-full voice-wave" style={{ animationDelay: '0.1s' }} />
-                <div className="w-1 h-8 bg-purple-400 rounded-full voice-wave" style={{ animationDelay: '0.2s' }} />
-                <div className="w-1 h-8 bg-purple-400 rounded-full voice-wave" style={{ animationDelay: '0.3s' }} />
-                <div className="w-1 h-8 bg-purple-400 rounded-full voice-wave" style={{ animationDelay: '0.4s' }} />
+                <div className="w-1 h-8 bg-royal-400 rounded-full voice-wave" style={{ animationDelay: '0s' }} />
+                <div className="w-1 h-8 bg-royal-400 rounded-full voice-wave" style={{ animationDelay: '0.1s' }} />
+                <div className="w-1 h-8 bg-gold-400 rounded-full voice-wave" style={{ animationDelay: '0.2s' }} />
+                <div className="w-1 h-8 bg-royal-400 rounded-full voice-wave" style={{ animationDelay: '0.3s' }} />
+                <div className="w-1 h-8 bg-royal-400 rounded-full voice-wave" style={{ animationDelay: '0.4s' }} />
               </div>
             </motion.div>
           </motion.div>

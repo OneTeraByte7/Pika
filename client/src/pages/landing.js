@@ -14,7 +14,7 @@ export default function Landing() {
         <title>Pika - Voice-First Social Media AI Agent</title>
         <meta name="description" content="Manage all your social media platforms with just your voice. Instagram, Twitter, and TikTok in one intelligent conversation." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <meta name="theme-color" content="#667eea" />
+        <meta name="theme-color" content="#7e22ce" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

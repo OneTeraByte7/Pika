@@ -10,9 +10,9 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-pink-600">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-royal">
       <div className="text-white text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-gold-400 mx-auto mb-4"></div>
         <p className="text-xl font-semibold">Loading Pika...</p>
       </div>
     </div>

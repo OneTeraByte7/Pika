@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+    @apply bg-gradient-to-br from-purple-50 via-pink-50 to-amber-50 dark:bg-gradient-to-br dark:from-navy-900 dark:via-purple-950 dark:to-navy-900 text-gray-900 dark:text-gray-100;
   }
   
   html {
@@ -14,15 +14,15 @@
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-pika text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply px-6 py-3 bg-gradient-royal text-white rounded-full font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 border border-gold-400/30;
   }
 
   .card {
-    @apply bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6;
+    @apply bg-white/90 dark:bg-gradient-to-br dark:from-navy-800/90 dark:via-purple-900/90 dark:to-navy-800/90 rounded-2xl shadow-xl p-6 border border-gold-400/20 backdrop-blur-sm;
   }
 
   .gradient-text {
-    @apply bg-gradient-pika bg-clip-text text-transparent;
+    @apply bg-gradient-royal bg-clip-text text-transparent;
   }
 }
 
@@ -33,15 +33,15 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-800;
+  @apply bg-purple-100 dark:bg-navy-900;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-purple-400 dark:bg-purple-600 rounded-full;
+  @apply bg-gradient-to-b from-royal-600 to-burgundy-600 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-purple-500 dark:bg-purple-500;
+  @apply bg-gradient-to-b from-gold-500 to-royal-600;
 }
 
 /* Animations */
@@ -61,7 +61,7 @@
 
 /* PWA Install Prompt */
 .pwa-prompt {
-  @apply fixed bottom-20 left-4 right-4 bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 z-50;
+  @apply fixed bottom-20 left-4 right-4 bg-white/95 dark:bg-gradient-to-br dark:from-navy-800 dark:to-purple-900 rounded-xl shadow-2xl p-4 z-50 border border-gold-400/30 backdrop-blur-md;
 }
 
 /* Voice Wave Animation */
@@ -81,26 +81,28 @@
 /* Grid Pattern */
 .bg-grid-pattern {
   background-image: 
-    linear-gradient(to right, #e5e7eb 1px, transparent 1px),
-    linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
+    linear-gradient(to right, #d8b4fe 1px, transparent 1px),
+    linear-gradient(to bottom, #d8b4fe 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 .dark .bg-grid-pattern {
   background-image: 
-    linear-gradient(to right, #374151 1px, transparent 1px),
-    linear-gradient(to bottom, #374151 1px, transparent 1px);
+    linear-gradient(to right, #6b21a8 1px, transparent 1px),
+    linear-gradient(to bottom, #6b21a8 1px, transparent 1px);
 }
 
 /* Glass Effect */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(217, 119, 6, 0.2);
 }
 
 .dark .glass {
-  background: rgba(17, 24, 39, 0.7);
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.7) 0%, rgba(107, 33, 168, 0.7) 100%);
+  border: 1px solid rgba(217, 119, 6, 0.3);
 }
 
 /* Smooth transitions */

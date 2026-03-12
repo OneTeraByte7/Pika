@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 
 from server.config.settings import settings
-from server.app import auth, pika, social
+from server.app import auth, pika, social, twitter_oauth
 from server.models.mongodb import MongoDB
 from server.middleware.request_logger import RequestLoggerMiddleware
 
@@ -58,6 +58,7 @@ app.add_middleware(RequestLoggerMiddleware)
 app.include_router(auth.router)
 app.include_router(pika.router)
 app.include_router(social.router)
+app.include_router(twitter_oauth.router)
 app.include_router(advanced_router)
 
 @app.get("/")

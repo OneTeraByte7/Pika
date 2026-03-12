@@ -44,7 +44,7 @@ async def get_twitter_auth_url(current_user: User = Depends(get_current_user)):
     params = {
         "response_type": "code",
         "client_id": settings.TWITTER_API_KEY,
-        "redirect_uri": f"{settings.FRONTEND_URL}/auth/twitter/callback",
+        "redirect_uri": f"{settings.FRONTEND_URL}/twitter-callback",
         "scope": " ".join(scopes),
         "state": state,
         "code_challenge": "challenge",
@@ -81,7 +81,7 @@ async def twitter_callback(
         "code": code,
         "grant_type": "authorization_code",
         "client_id": settings.TWITTER_API_KEY,
-        "redirect_uri": f"{settings.FRONTEND_URL}/auth/twitter/callback",
+        "redirect_uri": f"{settings.FRONTEND_URL}/twitter-callback",
         "code_verifier": "challenge"
     }
     

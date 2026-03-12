@@ -40,6 +40,7 @@ export default function Navbar() {
     { label: 'Features', href: '#features' },
     { label: 'How it Works', href: '#how-it-works' },
     { label: 'Pricing', href: '#pricing' },
+    { label: 'Twitter Dashboard', href: '/social-dashboard' },
     { label: 'Docs', href: '/docs' },
   ];
 

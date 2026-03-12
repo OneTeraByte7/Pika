@@ -67,6 +67,7 @@ class SocialAccount(BaseModel):
     platform_user_id: str
     username: Optional[str] = None
     access_token: str
+    access_token_secret: Optional[str] = None  # For OAuth 1.0a (Twitter)
     refresh_token: Optional[str] = None
     token_expires_at: Optional[datetime] = None
     is_active: bool = True

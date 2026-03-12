@@ -18,11 +18,18 @@ class Settings(BaseSettings):
     
     REDIS_URL: str = "redis://localhost:6379"
     
+    FRONTEND_URL: str = "http://localhost:3000"
+    
     INSTAGRAM_CLIENT_ID: Optional[str] = None
     INSTAGRAM_CLIENT_SECRET: Optional[str] = None
     TWITTER_API_KEY: Optional[str] = None
     TWITTER_API_SECRET: Optional[str] = None
     TWITTER_BEARER_TOKEN: Optional[str] = None
+    TWITTER_ACCESS_TOKEN: Optional[str] = None
+    TWITTER_ACCESS_TOKEN_SECRET: Optional[str] = None
+    TWITTER_CLIENT_ID: Optional[str] = None
+    TWITTER_CLIENT_SECRET: Optional[str] = None
+    TWITTER_CALLBACK_URL: str = "http://localhost:8000/twitter/callback"
     TIKTOK_CLIENT_KEY: Optional[str] = None
     TIKTOK_CLIENT_SECRET: Optional[str] = None
     

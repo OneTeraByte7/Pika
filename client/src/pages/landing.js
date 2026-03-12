@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { Toaster } from 'react-hot-toast';
 import Navbar from '../components/Navbar';
+import TwitterBanner from '../components/TwitterBanner';
 import Hero from '../components/Hero';
 import Features from '../components/Features';
 import HowItWorks from '../components/HowItWorks';
@@ -23,6 +24,7 @@ export default function Landing() {
 
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Navbar />
+        <TwitterBanner />
         
         <main>
           <Hero />

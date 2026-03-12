@@ -20,7 +20,11 @@ class SocialMediaAggregator:
                 self.account_meta["instagram"] = {"user_id": user_id}
 
             elif platform == "twitter" and access_token:
-                self.accounts["twitter"] = TwitterService(access_token)
+                access_token_secret = account.get("access_token_secret")
+                self.accounts["twitter"] = TwitterService(
+                    access_token=access_token,
+                    access_token_secret=access_token_secret
+                )
                 self.account_meta["twitter"] = {"user_id": user_id}
                 
     async def get_morning_briefing(self) -> Dict[str, Any]:
@@ -63,6 +67,36 @@ class SocialMediaAggregator:
         briefing["summary"] = self._generate_summary(briefing)
         
         return briefing
+    
+    async def post_content(self, platform: str, content: str, media_url: str = None) -> Dict[str, Any]:
+        """Post content to a single platform"""
+        if platform == "instagram" and "instagram" in self.accounts:
+            if media_url:
+                result = await self.accounts["instagram"].post_media(media_url, content)
+                return {
+                    "success": result is not None,
+                    "post_id": result.get("id") if result else None,
+                    "url": result.get("permalink") if result else None
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": "Instagram requires media_url"
+                }
+        
+        elif platform == "twitter" and "twitter" in self.accounts:
+            result = await self.accounts["twitter"].post_tweet(content)
+            return {
+                "success": result is not None,
+                "post_id": result.get("id") if result else None,
+                "url": f"https://twitter.com/i/web/status/{result.get('id')}" if result and result.get('id') else None
+            }
+        
+        else:
+            return {
+                "success": False,
+                "error": f"Platform {platform} not connected or not supported"
+            }
     
     async def post_to_multiple_platform(self, platforms: List[str], content:str, media_url: str = None) -> Dict[str, Any]:
         results = {}

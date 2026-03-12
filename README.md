@@ -36,6 +36,7 @@ pika-ai/
 
 - **Voice-First Interface**: Natural conversations with Pika
 - **Cross-Platform Aggregation**: Instagram, Twitter/X, TikTok in one place
+- **Twitter OAuth Integration**: Connect and manage Twitter accounts (✨ NEW!)
 - **Smart DM Management**: Never miss important messages
 - **One-Command Posting**: Post to multiple platforms simultaneously
 - **Morning Briefings**: Daily social media digest
@@ -58,6 +59,29 @@ pika-ai/
 - WebSockets
 
 ## 📦 Installation
+
+### Quick Start (Twitter Integration)
+
+```bash
+# 1. Verify Twitter setup
+python setup_twitter.py
+
+# 2. Install dependencies
+cd server
+pip install -r requirements.txt
+
+# 3. Configure environment
+cp .env.example .env
+# Edit .env with your Twitter API credentials
+
+# 4. Run tests
+python ../test_twitter_integration.py
+
+# 5. Start server
+python main.py
+```
+
+For detailed Twitter integration setup, see [TWITTER_INTEGRATION.md](TWITTER_INTEGRATION.md)
 
 ### Backend Setup
 
@@ -85,16 +109,28 @@ Create `.env` files in both backend and frontend directories:
 
 ### Backend .env
 ```
-DATABASE_URL=postgresql://user:password@localhost/pika_db
+DATABASE_URL=mongodb://localhost:27017/pika_db
 REDIS_URL=redis://localhost:6379
 SECRET_KEY=your-secret-key
-INSTAGRAM_CLIENT_ID=your-instagram-client-id
-INSTAGRAM_CLIENT_SECRET=your-instagram-client-secret
+FRONTEND_URL=http://localhost:3000
+
+# Twitter OAuth 2.0 (required for Twitter integration)
 TWITTER_API_KEY=your-twitter-api-key
 TWITTER_API_SECRET=your-twitter-api-secret
+TWITTER_CLIENT_ID=your-twitter-client-id
+TWITTER_CLIENT_SECRET=your-twitter-client-secret
+TWITTER_BEARER_TOKEN=your-twitter-bearer-token
+TWITTER_CALLBACK_URL=http://localhost:8000/twitter/callback
+
+# Other social platforms
+INSTAGRAM_CLIENT_ID=your-instagram-client-id
+INSTAGRAM_CLIENT_SECRET=your-instagram-client-secret
 TIKTOK_CLIENT_KEY=your-tiktok-client-key
 ELEVENLABS_API_KEY=your-elevenlabs-api-key
+OPENAI_API_KEY=your-openai-api-key
 ```
+
+See [.env.example](server/.env.example) for complete configuration template.
 
 ### Frontend .env
 ```
@@ -120,8 +156,14 @@ cd deployment
 ## 🧪 Testing
 
 ```bash
+# Twitter integration tests
+python test_twitter_integration.py
+
+# Twitter setup verification
+python setup_twitter.py
+
 # Backend tests
-cd backend
+cd server
 pytest
 
 # Frontend tests
@@ -139,6 +181,13 @@ npm test
 ## 📄 License
 
 MIT License
+
+## 📚 Documentation
+
+- [Twitter Integration Guide](TWITTER_INTEGRATION.md) - Complete Twitter OAuth setup
+- [Implementation Summary](TWITTER_IMPLEMENTATION_SUMMARY.md) - Technical details
+- [MongoDB Setup](MONGODB_SETUP.md) - Database configuration
+- [Services Documentation](SERVICES_README.md) - Service architecture
 
 ## 👥 Contact
 

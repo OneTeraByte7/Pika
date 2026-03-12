@@ -72,16 +72,34 @@ async def create_post(
 ):
     db = get_db()
     
-    mock_accounts = []
-    aggregator = SocialMediaAggregator(mock_accounts)
+    # Fetch user's connected accounts
+    accounts_cursor = db[COLLECTIONS["social_accounts"]].find({
+        "user_id": str(current_user.id),
+        "is_active": True
+    })
+    
+    connected_accounts = []
+    async for account in accounts_cursor:
+        connected_accounts.append(account)
+    
+    # Create aggregator with real accounts
+    aggregator = SocialMediaAggregator(connected_accounts)
     
     results = {}
     for platform in post.platform:
-        results[platform] = {
-            "success": True,
-            "post_id": f"mock_{platform}_123",
-            "url": f"https://{platform}.com/post/123"
-        }
+        try:
+            # Use aggregator to post to the platform
+            result = await aggregator.post_content(
+                platform=platform,
+                content=post.content,
+                media_url=post.media_url
+            )
+            results[platform] = result
+        except Exception as e:
+            results[platform] = {
+                "success": False,
+                "error": str(e)
+            }
     
     # Store post in MongoDB
     post_doc = Post(
@@ -91,7 +109,7 @@ async def create_post(
         media_url=post.media_url,
         media_type=post.media_type,
         results=results,
-        status="posted",
+        status="posted" if any(r.get("success") for r in results.values()) else "failed",
         created_at=datetime.utcnow()
     )
     
@@ -99,10 +117,11 @@ async def create_post(
         post_doc.dict(by_alias=True, exclude={"id"})
     )
         
+    successful_posts = sum(1 for r in results.values() if r.get("success"))
     return PostResponse(
-        success = True,
+        success = successful_posts > 0,
         results = results,
-        message = f"Posted to {len(post.platform)} platforms successfully"
+        message = f"Posted to {successful_posts}/{len(post.platform)} platforms successfully"
     )
     
 @router.get("/dms", response_model = List[DMSummary])

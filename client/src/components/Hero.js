@@ -1,193 +1,146 @@
 import { motion } from 'framer-motion';
-import { Sparkles, Zap, Shield, Globe } from 'lucide-react';
+import { Zap, Play, ArrowRight, Star, Sparkles, Command } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      {/* Background Layer */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-pitch-black" />
+        <div className="absolute inset-0 bg-grid-glow opacity-30" />
+        <div className="absolute inset-0 bg-noise" />
+
+        {/* Cinematic Glows */}
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-vivid-purple/20 blur-[120px] rounded-full animate-pulse-slow" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-electric-blue/10 blur-[120px] rounded-full animate-glow" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 w-full">
+        <div className="flex flex-col items-center text-center">
+          {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 px-6 py-2 bg-white/5 border border-white/10 rounded-full mb-12 backdrop-blur-md"
           >
-            <div className="inline-flex items-center px-4 py-2 bg-royal-100 dark:bg-royal-900/30 rounded-full mb-6 border border-gold-400/20">
-              <Sparkles className="w-4 h-4 text-royal-600 mr-2" />
-              <span className="text-sm font-semibold text-royal-600 dark:text-royal-400">
-                Voice-First AI Agent
-              </span>
-            </div>
-
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              <span className="bg-gradient-royal bg-clip-text text-transparent">
-                Social media,
-              </span>
-              <br />
-              <span className="text-gray-900 dark:text-white">
-                simplified.
-              </span>
-            </h1>
-
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-              Manage all your social platforms with just your voice. 
-              Pika aggregates Instagram, Twitter, and TikTok into one intelligent conversation.
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <Link href="/app">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-gradient-royal text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-all border border-gold-400/30"
-                >
-                  Start Talking
-                </motion.button>
-              </Link>
-              <Link href="#how-it-works">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-white/90 dark:bg-navy-800/90 text-gray-900 dark:text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all border border-gold-400/30 backdrop-blur-sm"
-                >
-                  See Demo
-                </motion.button>
-              </Link>
-            </div>
-
-            {/* Twitter Dashboard CTA */}
-            <div className="mt-6">
-              <Link href="/social-dashboard">
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all cursor-pointer"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                  </svg>
-                  <div className="text-left">
-                    <div className="text-sm opacity-90">NEW</div>
-                    <div className="font-semibold">Twitter Dashboard →</div>
-                  </div>
-                </motion.div>
-              </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-8 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-              <div>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">50%</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Less Time</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">3+</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Platforms</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">∞</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Possibilities</p>
-              </div>
-            </div>
+            <Sparkles className="w-4 h-4 text-electric-blue" />
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-white/80">
+              The Future of Social AI
+            </span>
           </motion.div>
 
-          {/* Right Content - Floating Cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative h-[500px] hidden md:block"
+          {/* Main Title */}
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-[12vw] sm:text-[10vw] lg:text-[8vw] font-[900] leading-[0.8] uppercase tracking-tighter mb-12 select-none"
           >
-            {/* Floating Card 1 */}
-            <motion.div
-              animate={{
-                y: [0, -20, 0],
-                rotate: [0, 5, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute top-0 left-0 w-64 bg-white/90 dark:bg-gradient-to-br dark:from-navy-800/90 dark:to-purple-900/90 rounded-2xl shadow-2xl p-6 border border-gold-400/30 backdrop-blur-sm"
-            >
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-gradient-royal rounded-full" />
-                <div className="ml-3">
-                  <p className="font-semibold text-gray-900 dark:text-white">Sarah Chen</p>
-                  <p className="text-xs text-gray-500">@sarahc</p>
-                </div>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                "Pika just posted my content to all platforms in seconds! 🚀"
-              </p>
-            </motion.div>
+            <span className="block text-white">Social</span>
+            <span className="block italic text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-vivid-purple to-hot-pink animate-gradient">
+              Evolved.
+            </span>
+          </motion.h1>
 
-            {/* Floating Card 2 */}
-            <motion.div
-              animate={{
-                y: [0, 20, 0],
-                rotate: [0, -5, 0],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
-              }}
-              className="absolute top-32 right-0 w-72 bg-gradient-royal rounded-2xl shadow-2xl p-6 text-white border border-gold-400/30"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-lg">Your Morning Brief</h3>
-                <Zap className="w-6 h-6" />
-              </div>
-              <p className="text-sm opacity-90 mb-4">
-                You have 12 new DMs and your latest post got 234 likes across all platforms.
-              </p>
-              <div className="flex space-x-2">
-                <div className="w-8 h-8 bg-white/20 rounded-full" />
-                <div className="w-8 h-8 bg-white/20 rounded-full" />
-                <div className="w-8 h-8 bg-white/20 rounded-full" />
-              </div>
-            </motion.div>
+          {/* Description */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="max-w-2xl text-lg md:text-xl text-white/50 font-medium leading-relaxed mb-12"
+          >
+            Pika is the first voice-native AI agent that manages your entire social presence.
+            Talk to your audience, automate your growth, and dominate the feed.
+          </motion.p>
 
-            {/* Floating Card 3 */}
-            <motion.div
-              animate={{
-                y: [0, -15, 0],
-                scale: [1, 1.05, 1],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 2,
-              }}
-              className="absolute bottom-0 left-12 w-56 bg-white/90 dark:bg-gradient-to-br dark:from-navy-800/90 dark:to-purple-900/90 rounded-2xl shadow-2xl p-5 border border-gold-400/30 backdrop-blur-sm"
-            >
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="w-12 h-12 bg-gradient-royal rounded-full flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-white" />
+          {/* Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8"
+          >
+            <Link href="/app">
+              <motion.button
+                whileHover={{ scale: 1.05, shadow: "0 0 40px rgba(0, 242, 255, 0.4)" }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative px-12 py-6 bg-electric-blue text-black font-black uppercase tracking-[0.2em] rounded-full overflow-hidden"
+              >
+                <div className="relative z-10 flex items-center space-x-3">
+                  <span>Open Pika</span>
+                  <Zap className="w-5 h-5 fill-black" />
                 </div>
-                <div>
-                  <p className="font-bold text-gray-900 dark:text-white">Pika AI</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Voice Assistant</p>
+                <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              </motion.button>
+            </Link>
+
+            <Link href="#how-it-works">
+              <button className="flex items-center space-x-3 group">
+                <div className="w-14 h-14 bg-white/5 border border-white/10 rounded-full flex items-center justify-center group-hover:border-electric-blue group-hover:bg-electric-blue/10 transition-all">
+                  <Play className="w-5 h-5 text-white group-hover:text-electric-blue fill-current" />
                 </div>
-              </div>
-              <div className="flex space-x-1">
-                <div className="w-1 h-8 bg-royal-400 rounded-full voice-wave" style={{ animationDelay: '0s' }} />
-                <div className="w-1 h-8 bg-royal-400 rounded-full voice-wave" style={{ animationDelay: '0.1s' }} />
-                <div className="w-1 h-8 bg-gold-400 rounded-full voice-wave" style={{ animationDelay: '0.2s' }} />
-                <div className="w-1 h-8 bg-royal-400 rounded-full voice-wave" style={{ animationDelay: '0.3s' }} />
-                <div className="w-1 h-8 bg-royal-400 rounded-full voice-wave" style={{ animationDelay: '0.4s' }} />
-              </div>
-            </motion.div>
+                <span className="text-sm font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
+                  Watch Demo
+                </span>
+              </button>
+            </Link>
           </motion.div>
+
+          {/* Floating Elements (Decorative) */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <motion.div
+              animate={{
+                y: [-20, 20, -20],
+                rotate: [0, 10, 0]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-[20%] left-[10%] w-32 h-32 bg-white/5 border border-white/10 rounded-[40px] backdrop-blur-xl flex items-center justify-center"
+            >
+              <Command className="w-10 h-10 text-electric-blue/50" />
+            </motion.div>
+
+            <motion.div
+              animate={{
+                y: [20, -20, 20],
+                rotate: [0, -10, 0]
+              }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute bottom-[20%] right-[10%] w-40 h-40 bg-white/5 border border-white/10 rounded-[60px] backdrop-blur-xl flex items-center justify-center shadow-neon-purple"
+            >
+              <div className="w-full px-6 space-y-3">
+                <div className="h-2 w-[80%] bg-vivid-purple/30 rounded-full" />
+                <div className="h-2 w-[60%] bg-vivid-purple/20 rounded-full" />
+                <div className="h-2 w-[90%] bg-vivid-purple/40 rounded-full" />
+              </div>
+            </motion.div>
+
+            {/* Stars/Dots */}
+            {[...Array(10)].map((_, i) => (
+              <motion.div
+                key={i}
+                animate={{ opacity: [0.2, 0.8, 0.2] }}
+                transition={{ duration: 2 + i % 3, repeat: Infinity }}
+                className="absolute w-1 h-1 bg-white rounded-full"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-4"
+      >
+        <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/30">Scroll</span>
+        <div className="w-[2px] h-12 bg-gradient-to-b from-electric-blue to-transparent" />
+      </motion.div>
     </section>
   );
 }

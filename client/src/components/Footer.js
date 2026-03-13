@@ -1,136 +1,137 @@
 import { motion } from 'framer-motion';
-import { Twitter, Instagram, Github, Mail } from 'lucide-react';
+import { Twitter, Instagram, Github, Mail, Zap, ArrowUp } from 'lucide-react';
 
 export default function Footer() {
   const footerLinks = {
-    Product: [
+    Vault: [
       { label: 'Features', href: '#features' },
       { label: 'Pricing', href: '#pricing' },
-      { label: 'How it Works', href: '#how-it-works' },
-      { label: 'Roadmap', href: '#roadmap' },
+      { label: 'Pipeline', href: '#how-it-works' },
     ],
-    Company: [
-      { label: 'About', href: '#about' },
-      { label: 'Blog', href: '#blog' },
-      { label: 'Careers', href: '#careers' },
-      { label: 'Contact', href: '#contact' },
-    ],
-    Resources: [
-      { label: 'Documentation', href: '/docs' },
-      { label: 'API Reference', href: '/api' },
-      { label: 'Support', href: '#support' },
-      { label: 'Status', href: '#status' },
+    intel: [
+      { label: 'Status', href: '#' },
+      { label: 'Docs', href: '#' },
+      { label: 'API', href: '#' },
     ],
     Legal: [
-      { label: 'Privacy', href: '#privacy' },
-      { label: 'Terms', href: '#terms' },
-      { label: 'Security', href: '#security' },
-      { label: 'Cookies', href: '#cookies' },
+      { label: 'Privacy', href: '#' },
+      { label: 'Terms', href: '#' },
     ],
   };
 
   const socialLinks = [
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Github, href: '#', label: 'GitHub' },
-    { icon: Mail, href: '#', label: 'Email' },
+    { icon: Twitter, href: '#', color: 'electric-blue' },
+    { icon: Instagram, href: '#', color: 'hot-pink' },
+    { icon: Github, href: '#', color: 'white' },
   ];
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-12">
-          {/* Brand Column */}
-          <div className="col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-xl">P</span>
+    <footer className="bg-pitch-black border-t border-white/5 pt-24 pb-12 overflow-hidden relative">
+      {/* Glow Backdrop */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-electric-blue/5 blur-[100px] rounded-full pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-16 mb-24">
+          {/* Brand Info */}
+          <div className="col-span-1 lg:col-span-3">
+            <div className="flex items-center space-x-4 mb-8 group cursor-default">
+              <div className="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center group-hover:border-electric-blue group-hover:shadow-neon-blue transition-all duration-500">
+                <Zap className="w-7 h-7 text-electric-blue fill-current" />
               </div>
-              <span className="text-2xl font-bold text-white">Pika</span>
+              <span className="text-4xl font-black uppercase tracking-tighter text-white">Pika.</span>
             </div>
-            <p className="text-gray-400 mb-6 max-w-xs">
-              Voice-first AI agent for managing all your social media platforms in one place.
+
+            <p className="text-xl text-white/30 font-medium max-w-sm mb-12 italic leading-relaxed">
+              Ascending the flow of social media through voice-native intelligence.
             </p>
-            {/* Social Links */}
-            <div className="flex space-x-4">
+
+            <div className="flex space-x-6">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
                   <motion.a
                     key={index}
                     href={social.href}
-                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileHover={{ scale: 1.1, y: -5 }}
                     whileTap={{ scale: 0.9 }}
-                    className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 transition-all"
-                    aria-label={social.label}
+                    className={`w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:border-${social.color}/50 hover:bg-${social.color}/5 transition-all duration-500`}
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className={`w-6 h-6 text-white group-hover:text-${social.color}`} />
                   </motion.a>
                 );
               })}
             </div>
           </div>
 
-          {/* Links Columns */}
-          {Object.entries(footerLinks).map(([category, links], index) => (
-            <div key={index}>
-              <h3 className="text-white font-semibold mb-4">{category}</h3>
-              <ul className="space-y-3">
-                {links.map((link, i) => (
-                  <li key={i}>
-                    <a
-                      href={link.href}
-                      className="text-gray-400 hover:text-purple-400 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Links Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 col-span-1 lg:col-span-3">
+            {Object.entries(footerLinks).map(([category, links], index) => (
+              <div key={index}>
+                <h3 className="text-xs font-black uppercase tracking-[0.4em] text-white/20 mb-8">{category}</h3>
+                <ul className="space-y-6">
+                  {links.map((link, i) => (
+                    <li key={i}>
+                      <a
+                        href={link.href}
+                        className="text-lg font-bold text-white/40 hover:text-white transition-colors flex items-center group"
+                      >
+                        <span className="w-0 group-hover:w-4 h-[2px] bg-electric-blue mr-0 group-hover:mr-3 transition-all duration-300" />
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Newsletter */}
-        <div className="border-t border-gray-800 pt-8 mb-8">
-          <div className="max-w-md">
-            <h3 className="text-white font-semibold mb-3">Stay updated</h3>
-            <p className="text-gray-400 text-sm mb-4">
-              Get the latest updates on features and product news.
-            </p>
-            <div className="flex gap-2">
+        {/* Newsletter Section */}
+        <div className="glass-card mb-24 relative overflow-hidden group">
+          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="max-w-md text-center lg:text-left">
+              <h3 className="text-3xl font-black uppercase tracking-tight text-white mb-2">Join the Collective</h3>
+              <p className="text-white/40 font-medium">Get the latest patches and drops before anyone else.</p>
+            </div>
+
+            <div className="flex w-full lg:w-auto gap-4">
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-white placeholder-gray-500"
+                placeholder="VIBE@CHECK.COM"
+                className="flex-1 lg:w-80 px-8 py-5 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-electric-blue text-white font-bold uppercase tracking-widest placeholder:text-white/10"
               />
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                className="px-8 py-5 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-electric-blue transition-all"
               >
-                Subscribe
+                In
               </motion.button>
             </div>
           </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-electric-blue/5 to-vivid-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2024 Pika AI. All rights reserved.
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 border-t border-white/5 pt-12">
+          <p className="text-xs font-bold uppercase tracking-widest text-white/20">
+            © 2024 PIKA AI / CORE PROTOCOL
           </p>
-          <div className="flex items-center space-x-6 text-sm">
-            <a href="#privacy" className="text-gray-400 hover:text-purple-400 transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#terms" className="text-gray-400 hover:text-purple-400 transition-colors">
-              Terms of Service
-            </a>
-            <a href="#cookies" className="text-gray-400 hover:text-purple-400 transition-colors">
-              Cookie Settings
-            </a>
+
+          <div className="flex items-center space-x-8">
+            <button
+              onClick={scrollToTop}
+              className="flex items-center space-x-3 group"
+            >
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-white/30 group-hover:text-white transition-colors">Surface</span>
+              <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-full flex items-center justify-center group-hover:border-electric-blue transition-all">
+                <ArrowUp className="w-4 h-4 text-white group-hover:text-electric-blue" />
+              </div>
+            </button>
           </div>
         </div>
       </div>

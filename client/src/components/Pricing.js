@@ -1,84 +1,82 @@
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 
 const plans = [
   {
-    name: 'Free',
+    name: 'Starter',
     price: '$0',
     period: 'forever',
-    description: 'Perfect for trying out Pika',
+    description: 'Dip your toes in the void.',
     features: [
-      '1 social account per platform',
-      '50 voice queries/month',
-      'Basic analytics',
-      'Morning briefings',
-      'Community support',
+      '1 Platform Connect',
+      'Daily Briefings',
+      'Basic Voice Commands',
+      'Standard Support',
     ],
-    cta: 'Get Started',
+    cta: 'Start Now',
     popular: false,
-    gradient: 'from-gray-400 to-gray-600',
+    color: 'white',
   },
   {
-    name: 'Pro',
+    name: 'Main',
     price: '$12',
-    period: 'per month',
-    description: 'For power users and creators',
+    period: 'monthly',
+    description: 'Full power. No limits.',
     features: [
-      'Unlimited accounts',
-      'Unlimited voice queries',
-      'Advanced analytics',
-      'Priority DM management',
-      'Custom voice commands',
-      'API access',
-      'Priority support',
+      'All Sync Platforms',
+      'Unlimited Voice AI',
+      'Hype Analytics',
+      'Priority DMs',
+      'Custom Commands',
     ],
-    cta: 'Start Free Trial',
+    cta: 'Ascend Free',
     popular: true,
-    gradient: 'from-purple-600 to-pink-600',
+    color: 'electric-blue',
   },
   {
-    name: 'Team',
+    name: 'Squad',
     price: '$39',
-    period: 'per month',
-    description: 'For agencies and teams',
+    period: 'monthly',
+    description: 'For the elite agencies.',
     features: [
-      'Everything in Pro',
-      'Up to 10 team members',
-      'Team collaboration',
-      'Shared analytics',
-      'Custom integrations',
-      'Dedicated account manager',
-      '24/7 support',
+      'Everything in Main',
+      '10 Team Seats',
+      'White Label API',
+      '24/7 Ghost Support',
     ],
-    cta: 'Contact Sales',
+    cta: 'Get Elite',
     popular: false,
-    gradient: 'from-blue-600 to-cyan-600',
+    color: 'vivid-purple',
   },
 ];
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-20 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="pricing" className="py-32 bg-pitch-black relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Simple,{' '}
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              transparent pricing
-            </span>
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Choose the plan that's right for you. All plans include a 14-day free trial.
-          </p>
-        </motion.div>
+        <div className="text-center mb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center space-x-2 px-4 py-1 bg-white/5 border border-white/10 rounded-full mb-6"
+          >
+            <Star className="w-3 h-3 text-electric-blue fill-current" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Tiers of Power</span>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-white mb-8"
+          >
+            Pick Your <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-vivid-purple">Energy.</span>
+          </motion.h2>
+        </div>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -88,63 +86,42 @@ export default function Pricing() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className={`relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 ${
-                plan.popular ? 'ring-4 ring-purple-600 ring-opacity-50' : ''
-              }`}
+              transition={{ delay: index * 0.1 }}
+              className={`group relative glass-card p-12 border-2 ${plan.popular ? 'border-electric-blue shadow-neon-blue' : 'border-white/10'
+                } hover:border-white/30 transition-all duration-500`}
             >
-              {/* Popular Badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="px-4 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-semibold rounded-full shadow-lg">
-                    Most Popular
-                  </span>
+                <div className="absolute top-0 right-12 -translate-y-1/2 px-6 py-2 bg-electric-blue text-black text-xs font-black uppercase tracking-widest rounded-full shadow-lg">
+                  Most Popular
                 </div>
               )}
 
-              {/* Plan Header */}
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  {plan.name}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                  {plan.description}
-                </p>
-                <div className="flex items-baseline justify-center">
-                  <span className={`text-5xl font-bold bg-gradient-to-r ${plan.gradient} bg-clip-text text-transparent`}>
-                    {plan.price}
-                  </span>
-                  <span className="text-gray-600 dark:text-gray-400 ml-2">
-                    {plan.period}
-                  </span>
+              <div className="mb-12">
+                <h3 className="text-xl font-bold uppercase tracking-[0.2em] text-white/50 mb-8">{plan.name}</h3>
+                <div className="flex items-baseline space-x-2">
+                  <span className="text-7xl font-black tracking-tighter text-white">{plan.price}</span>
+                  <span className="text-sm font-bold uppercase tracking-widest text-white/30">{plan.period}</span>
                 </div>
+                <p className="mt-4 text-white/60 font-medium">{plan.description}</p>
               </div>
 
-              {/* Features */}
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-6 mb-12 border-t border-white/5 pt-12">
                 {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start">
-                    <div className={`flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-r ${plan.gradient} flex items-center justify-center mt-0.5`}>
-                      <Check className="w-3 h-3 text-white" />
-                    </div>
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">
-                      {feature}
-                    </span>
+                  <li key={i} className="flex items-center space-x-4">
+                    <div className={`w-2 h-2 rounded-full ${plan.popular ? 'bg-electric-blue shadow-[0_0_8px_#00f2ff]' : 'bg-white/20'}`} />
+                    <span className="text-lg text-white/80 font-medium">{feature}</span>
                   </li>
                 ))}
               </ul>
 
-              {/* CTA Button */}
               <Link href="/app">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`w-full py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all ${
-                    plan.popular
-                      ? `bg-gradient-to-r ${plan.gradient} text-white`
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`w-full py-6 rounded-2xl text-lg font-black uppercase tracking-widest transition-all ${plan.popular
+                      ? 'bg-electric-blue text-black shadow-neon-blue'
+                      : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
+                    }`}
                 >
                   {plan.cta}
                 </motion.button>
@@ -153,18 +130,16 @@ export default function Pricing() {
           ))}
         </div>
 
-        {/* FAQ Note */}
+        {/* Custom Inquiry */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-12"
+          className="mt-24 text-center"
         >
-          <p className="text-gray-600 dark:text-gray-400">
-            Need a custom plan?{' '}
-            <a href="#contact" className="text-purple-600 dark:text-purple-400 font-semibold hover:underline">
-              Contact our sales team
+          <p className="text-white/40 font-medium italic">
+            Need more juice? <a href="#" className="text-white hover:text-electric-blue transition-colors underline underline-offset-8 decoration-white/20 group">
+              Talk to the Architects <ArrowRight className="inline-block w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
             </a>
           </p>
         </motion.div>

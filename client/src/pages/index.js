@@ -10,10 +10,13 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-royal">
+    <div className="min-h-screen flex items-center justify-center bg-pitch-black">
       <div className="text-white text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-gold-400 mx-auto mb-4"></div>
-        <p className="text-xl font-semibold">Loading Pika...</p>
+        <div className="relative w-20 h-20 mx-auto mb-8">
+          <div className="absolute inset-0 rounded-full border-2 border-white/10" />
+          <div className="absolute inset-0 rounded-full border-t-2 border-electric-blue animate-spin" />
+        </div>
+        <p className="text-sm font-black uppercase tracking-[0.5em] animate-pulse">Initializing Pika</p>
       </div>
     </div>
   );

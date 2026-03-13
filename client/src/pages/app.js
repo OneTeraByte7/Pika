@@ -115,40 +115,45 @@ export default function App() {
 
       <Toaster position="top-center" />
 
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900 dark:to-gray-900">
+      <div className="min-h-screen bg-pitch-black text-white selection:bg-electric-blue selection:text-black">
         {/* Header */}
-        <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/70 dark:bg-gray-900/70 border-b border-gray-200 dark:border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+        <header className="sticky top-0 z-50 backdrop-blur-2xl bg-black/60 border-b border-white/5">
+          <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+            <div className="flex items-center space-x-4 group cursor-pointer" onClick={() => setActiveTab('home')}>
               <motion.div
-                className="w-10 h-10 bg-gradient-pika rounded-full flex items-center justify-center"
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
+                className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center p-0.5"
+                whileHover={{ rotate: 180, scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 200 }}
               >
-                <Sparkles className="w-5 h-5 text-white" />
+                <div className="w-full h-full bg-black rounded-[14px] flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-white fill-current" />
+                </div>
               </motion.div>
-              <h1 className="text-2xl font-bold bg-gradient-pika bg-clip-text text-transparent">
-                Pika
-              </h1>
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-black uppercase tracking-tighter leading-none">
+                  Pika
+                </h1>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Neural Hub</span>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               {activeTab === 'pika' && (
                 <button
                   onClick={() => setShowBriefing(!showBriefing)}
-                  className="px-4 py-2 bg-gradient-pika text-white rounded-full font-medium hover:shadow-lg transition-shadow"
+                  className="hidden md:flex items-center px-6 py-2.5 bg-white text-black rounded-xl font-black uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all shadow-neon-white"
                 >
-                  {showBriefing ? 'Chat' : "What's Up?"}
+                  {showBriefing ? 'Terminal' : "Sync Void"}
                 </button>
               )}
               <div className="relative">
-                <button 
+                <button
                   onClick={() => setShowMoreMenu(!showMoreMenu)}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+                  className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all group"
                 >
-                  <Menu className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                  <Menu className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
                 </button>
-                
+
                 <AnimatePresence>
                   {showMoreMenu && (
                     <>
@@ -156,17 +161,18 @@ export default function App() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-40"
+                        className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
                         onClick={() => setShowMoreMenu(false)}
                       />
                       <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                        initial={{ opacity: 0, scale: 0.9, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                        className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
+                        exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                        className="absolute right-0 mt-4 w-64 glass-card p-2 z-50 border-white/20"
                       >
                         {moreMenuItems.map((item) => {
                           const Icon = item.icon;
+                          const isActive = activeTab === item.id;
                           return (
                             <button
                               key={item.id}
@@ -174,20 +180,15 @@ export default function App() {
                                 setActiveTab(item.id);
                                 setShowMoreMenu(false);
                               }}
-                              className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                                activeTab === item.id ? 'bg-purple-50 dark:bg-purple-900/20' : ''
-                              }`}
+                              className={`w-full flex items-center gap-4 px-4 py-4 rounded-xl transition-all group ${isActive ? 'bg-white/10 border border-white/10' : 'hover:bg-white/5'
+                                }`}
                             >
-                              <Icon className={`w-5 h-5 ${
-                                activeTab === item.id 
-                                  ? 'text-purple-600 dark:text-purple-400' 
-                                  : 'text-gray-600 dark:text-gray-400'
-                              }`} />
-                              <span className={`font-medium ${
-                                activeTab === item.id 
-                                  ? 'text-purple-600 dark:text-purple-400' 
-                                  : 'text-gray-900 dark:text-white'
-                              }`}>
+                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${isActive ? 'bg-electric-blue text-black' : 'bg-white/5 text-white/40 group-hover:text-white'
+                                }`}>
+                                <Icon className="w-4 h-4" />
+                              </div>
+                              <span className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-white' : 'text-white/40 group-hover:text-white'
+                                }`}>
                                 {item.label}
                               </span>
                             </button>
@@ -203,14 +204,14 @@ export default function App() {
         </header>
 
         {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 py-8 pb-24">
+        <main className="max-w-7xl mx-auto px-6 py-12 pb-32">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
             >
               {renderContent()}
             </motion.div>
@@ -218,59 +219,34 @@ export default function App() {
         </main>
 
         {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 px-4 py-3 z-50">
-          <div className="max-w-7xl mx-auto flex justify-around items-center">
+        <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-6 py-4 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[32px] shadow-2xl">
+          <div className="flex items-center space-x-12">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
-              
+
               return (
                 <motion.button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`flex flex-col items-center space-y-1 relative ${
-                    tab.isPrimary ? 'px-6' : 'px-2'
-                  }`}
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="relative group flex flex-col items-center"
                 >
-                  {tab.isPrimary ? (
-                    <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all ${
-                      isActive 
-                        ? 'bg-gradient-pika scale-110' 
-                        : 'bg-gray-200 dark:bg-gray-700'
-                    }`}>
-                      <Icon className={`w-7 h-7 ${
-                        isActive ? 'text-white' : 'text-gray-600 dark:text-gray-400'
-                      }`} />
-                    </div>
-                  ) : (
-                    <>
-                      <Icon className={`w-6 h-6 transition-colors ${
-                        isActive 
-                          ? 'text-purple-600 dark:text-purple-400' 
-                          : 'text-gray-600 dark:text-gray-400'
-                      }`} />
-                      <span className={`text-xs font-medium transition-colors ${
-                        isActive 
-                          ? 'text-purple-600 dark:text-purple-400' 
-                          : 'text-gray-600 dark:text-gray-400'
-                      }`}>
-                        {tab.label}
-                      </span>
-                      {isActive && (
-                        <motion.div
-                          layoutId="activeTab"
-                          className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-purple-600 rounded-full"
-                        />
-                      )}
-                    </>
+                  <Icon className={`w-6 h-6 transition-all duration-300 ${isActive ? 'text-white scale-110' : 'text-white/30 group-hover:text-white/60'
+                    }`} />
+
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-glow"
+                      className="absolute -bottom-2 w-1.5 h-1.5 bg-electric-blue rounded-full shadow-neon-blue"
+                    />
                   )}
                 </motion.button>
               );
             })}
           </div>
-        </div>
+        </nav>
       </div>
     </>
   );

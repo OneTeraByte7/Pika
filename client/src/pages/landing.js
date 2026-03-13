@@ -22,11 +22,14 @@ export default function Landing() {
 
       <Toaster position="top-center" />
 
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-pitch-black text-white selection:bg-electric-blue selection:text-black antialiased">
         <Navbar />
-        <TwitterBanner />
-        
-        <main>
+
+        <main className="relative overflow-hidden">
+          {/* Global Glows */}
+          <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-electric-blue/5 blur-[120px] rounded-full pointer-events-none" />
+          <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-vivid-purple/5 blur-[120px] rounded-full pointer-events-none" />
+
           <Hero />
           <Features />
           <HowItWorks />

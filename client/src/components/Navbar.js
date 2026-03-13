@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Menu, X, Settings, Sun, Moon } from 'lucide-react';
+import { Zap, Menu, X, Rocket, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,107 +15,89 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    // Check for dark mode preference
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    setIsDark(darkMode);
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDark;
-    setIsDark(newDarkMode);
-    localStorage.setItem('darkMode', newDarkMode.toString());
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
   const navItems = [
     { label: 'Features', href: '#features' },
     { label: 'How it Works', href: '#how-it-works' },
     { label: 'Pricing', href: '#pricing' },
-    { label: 'Twitter Dashboard', href: '/social-dashboard' },
-    { label: 'Docs', href: '/docs' },
+    { label: 'Dashboard', href: '/social-dashboard' },
   ];
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg'
-          : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isScrolled
+          ? 'py-4 bg-pitch-black/60 backdrop-blur-2xl border-b border-white/10'
+          : 'py-6 bg-transparent'
+        }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
+          <Link href="/" className="flex items-center space-x-3 group relative">
             <motion.div
-              className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
+              className="w-12 h-12 bg-white/5 border border-white/20 rounded-2xl flex items-center justify-center relative overflow-hidden group-hover:border-electric-blue/50 group-hover:shadow-[0_0_20px_rgba(0,242,255,0.3)] transition-all duration-500"
+              whileHover={{ rotate: 12, scale: 1.1 }}
             >
-              <Sparkles className="w-5 h-5 text-white" />
+              <Zap className="w-6 h-6 text-electric-blue" fill="currentColor" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-electric-blue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             </motion.div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Pika
-            </span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-black uppercase tracking-tighter text-white group-hover:text-electric-blue transition-colors leading-none">
+                Pika
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 group-hover:text-white/60 transition-colors">
+                AI Social
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-12">
             {navItems.map((item, index) => (
               <a
                 key={index}
                 href={item.href}
-                className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium transition-colors"
+                className="relative text-sm font-bold uppercase tracking-widest text-white/50 hover:text-white transition-colors group"
               >
                 {item.label}
+                <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-electric-blue transition-all duration-500 group-hover:w-full" />
               </a>
             ))}
           </div>
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Dark Mode Toggle */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={toggleDarkMode}
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              {isDark ? (
-                <Sun className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-              ) : (
-                <Moon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-              )}
-            </motion.button>
+          <div className="flex items-center space-x-6">
+            <Link href="/social-dashboard" className="hidden sm:block">
+              <motion.button
+                whileHover={{ scale: 1.05, x: 5 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-white/70 hover:text-white transition-colors"
+              >
+                <span>Login</span>
+                <ChevronRight className="w-4 h-4 text-electric-blue" />
+              </motion.button>
+            </Link>
 
-            {/* Get Started Button */}
             <Link href="/app">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="hidden md:block px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all"
+                className="px-8 py-3 bg-white text-black text-sm font-black uppercase tracking-widest rounded-full hover:bg-electric-blue transition-all relative overflow-hidden group"
               >
-                Get Started
+                <span className="relative z-10">Get Started</span>
+                <div className="absolute inset-0 bg-white group-hover:bg-electric-blue transition-colors" />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/40 to-transparent transition-opacity duration-500" />
               </motion.button>
             </Link>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="lg:hidden p-3 bg-white/5 border border-white/10 rounded-xl hover:border-white/30 transition-colors"
             >
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+                <X className="w-6 h-6 text-white" />
               ) : (
-                <Menu className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+                <Menu className="w-6 h-6 text-white" />
               )}
             </button>
           </div>
@@ -127,27 +108,34 @@ export default function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 top-[88px] z-40 lg:hidden bg-pitch-black/95 backdrop-blur-2xl border-t border-white/10"
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="p-8 space-y-8 flex flex-col h-full overflow-y-auto">
               {navItems.map((item, index) => (
-                <a
+                <motion.a
                   key={index}
                   href={item.href}
-                  className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium transition-colors py-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="text-4xl font-black uppercase tracking-tighter text-white/50 hover:text-electric-blue transition-colors flex items-center justify-between group"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item.label}
-                </a>
+                  <span>{item.label}</span>
+                  <ChevronRight className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </motion.a>
               ))}
-              <Link href="/app">
-                <button className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg">
-                  Get Started
-                </button>
-              </Link>
+
+              <div className="pt-8 border-t border-white/10">
+                <Link href="/app" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button className="w-full py-6 bg-vivid-purple text-white text-xl font-black uppercase tracking-widest rounded-3xl shadow-[0_0_30px_rgba(189,0,255,0.3)]">
+                    Get Started Now
+                  </button>
+                </Link>
+              </div>
             </div>
           </motion.div>
         )}

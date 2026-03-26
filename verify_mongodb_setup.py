@@ -4,7 +4,9 @@ Run this after setup to verify everything is configured correctly
 """
 
 import sys
+import os
 from pathlib import Path
+from typing import Optional
 
 # Add server to path
 server_path = Path(__file__).parent / "server"
@@ -13,20 +15,25 @@ sys.path.insert(0, str(server_path.parent))
 def check_dependencies():
     """Check if required packages are installed"""
     print("📦 Checking dependencies...")
+    missing = []
     try:
-        import motor
+        import motor  # type: ignore
         print("  ✅ motor installed")
     except ImportError:
-        print("  ❌ motor not installed - run: pip install motor")
-        return False
-    
+        print("  ⚠️  motor not installed")
+        missing.append("motor")
+
     try:
-        import pymongo
+        import pymongo  # type: ignore
         print("  ✅ pymongo installed")
     except ImportError:
-        print("  ❌ pymongo not installed - run: pip install pymongo")
+        print("  ⚠️  pymongo not installed")
+        missing.append("pymongo")
+
+    if missing:
+        print("\nInstall missing packages: pip install " + " ".join(missing))
         return False
-    
+
     return True
 
 def check_files():
@@ -54,21 +61,27 @@ def check_files():
 def check_env():
     """Check environment configuration"""
     print("\n🔐 Checking environment...")
-    
+    # Prefer environment variable first (useful in CI / containers)
+    env_db = os.environ.get("DATABASE_URL") or os.environ.get("MONGODB_URI")
+    if env_db:
+        print("  ✅ DATABASE_URL found in environment")
+        return True
+
+    # Fall back to reading server/.env if present
     env_file = Path(__file__).parent / "server" / ".env"
     if not env_file.exists():
-        print("  ❌ .env file not found")
+        print("  ⚠️  .env file not found; ensure DATABASE_URL is set in environment or server/.env")
         return False
-    
-    with open(env_file, 'r') as f:
-        content = f.read()
-    
-    if "DATABASE_URL=mongodb" in content:
-        print("  ✅ MongoDB Atlas URL configured")
-        return True
-    else:
-        print("  ❌ MongoDB URL not configured in .env")
-        return False
+
+    content = env_file.read_text()
+    # look for common keys
+    for key in ("DATABASE_URL", "MONGODB_URI", "MONGO_URI"):
+        if f"{key}=" in content:
+            print(f"  ✅ {key} configured in server/.env")
+            return True
+
+    print("  ❌ No MongoDB URI found in server/.env; add DATABASE_URL or MONGODB_URI")
+    return False
 
 def test_connection():
     """Test MongoDB connection"""
@@ -77,9 +90,14 @@ def test_connection():
     try:
         from server.config.settings import settings
         from pymongo import MongoClient
-        
+
+        mongodb_url = getattr(settings, "DATABASE_URL", None) or os.environ.get("DATABASE_URL") or os.environ.get("MONGODB_URI")
+        if not mongodb_url:
+            print("  ❌ No DATABASE_URL found (in settings or environment)")
+            return False
+
         # Quick sync test
-        client = MongoClient(settings.DATABASE_URL, serverSelectionTimeoutMS=5000)
+        client = MongoClient(mongodb_url, serverSelectionTimeoutMS=5000)
         client.admin.command('ping')
         print("  ✅ Successfully connected to MongoDB Atlas!")
         

@@ -38,11 +38,32 @@ export interface PostResponse {
 
 class TwitterService {
   private getAuthHeaders() {
-    const token = localStorage.getItem('access_token');
-    return {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
+    // Guard access to `localStorage` for SSR safety
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const token = window.localStorage.getItem('access_token');
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+      }
+    } catch (e) {
+      // ignore and return default headers
+    }
+    return headers;
+  }
+
+  private extractErrorMessage(err: unknown) {
+    // Normalize various axios / thrown error shapes
+    try {
+      // @ts-ignore
+      if (err && err.response && err.response.data) return err.response.data.detail || err.response.data.message || String(err);
+    } catch {}
+    try {
+      // @ts-ignore
+      if (err && err.message) return err.message;
+    } catch {}
+    return String(err ?? 'Unknown error');
   }
 
   /**
@@ -55,9 +76,9 @@ class TwitterService {
         { headers: this.getAuthHeaders() }
       );
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to get Twitter auth URL:', error);
-      throw new Error(error.response?.data?.detail || 'Failed to get authorization URL');
+      throw new Error(this.extractErrorMessage(error) || 'Failed to get authorization URL');
     }
   }
 
@@ -72,9 +93,9 @@ class TwitterService {
         { headers: this.getAuthHeaders() }
       );
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Twitter OAuth callback failed:', error);
-      throw new Error(error.response?.data?.detail || 'Failed to connect Twitter account');
+      throw new Error(this.extractErrorMessage(error) || 'Failed to connect Twitter account');
     }
   }
 
@@ -89,9 +110,9 @@ class TwitterService {
         { headers: this.getAuthHeaders() }
       );
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to refresh Twitter token:', error);
-      throw new Error(error.response?.data?.detail || 'Failed to refresh token');
+      throw new Error(this.extractErrorMessage(error) || 'Failed to refresh token');
     }
   }
 
@@ -105,9 +126,9 @@ class TwitterService {
         { headers: this.getAuthHeaders() }
       );
       return response.data.accounts || [];
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to get connected accounts:', error);
-      throw new Error(error.response?.data?.detail || 'Failed to fetch accounts');
+      throw new Error(this.extractErrorMessage(error) || 'Failed to fetch accounts');
     }
   }
 
@@ -126,9 +147,9 @@ class TwitterService {
         { headers: this.getAuthHeaders() }
       );
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to post content:', error);
-      throw new Error(error.response?.data?.detail || 'Failed to post content');
+      throw new Error(this.extractErrorMessage(error) || 'Failed to post content');
     }
   }
 
@@ -143,9 +164,9 @@ class TwitterService {
         { headers: this.getAuthHeaders() }
       );
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to disconnect platform:', error);
-      throw new Error(error.response?.data?.detail || 'Failed to disconnect platform');
+      throw new Error(this.extractErrorMessage(error) || 'Failed to disconnect platform');
     }
   }
 }

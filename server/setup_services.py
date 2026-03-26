@@ -1,23 +1,34 @@
-"""
-Setup script to create new Python services and boost Python codebase
-"""
-import os
+"""Setup script to create service directories relative to the repository.
 
-# Create directories
+This avoids hard-coded absolute Windows paths so the script works on any
+platform and in CI.
+"""
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent
+
+# Service directories to create (relative to `server/`)
 directories = [
-    'F:/Pika/server/services/analytics',
-    'F:/Pika/server/services/scheduler',
-    'F:/Pika/server/services/sentiment',
-    'F:/Pika/server/services/notifications',
-    'F:/Pika/server/services/media',
-    'F:/Pika/server/services/caching',
-    'F:/Pika/server/services/tasks',
-    'F:/Pika/server/services/export',
-    'F:/Pika/server/utils'
+    ROOT / "services" / "analytics",
+    ROOT / "services" / "scheduler",
+    ROOT / "services" / "sentiment",
+    ROOT / "services" / "notifications",
+    ROOT / "services" / "media",
+    ROOT / "services" / "caching",
+    ROOT / "services" / "tasks",
+    ROOT / "services" / "export",
+    ROOT / "utils",
 ]
 
-for directory in directories:
-    os.makedirs(directory, exist_ok=True)
-    print(f"Created: {directory}")
 
-print("\n✓ All directories created successfully!")
+def main():
+    for directory in directories:
+        directory.mkdir(parents=True, exist_ok=True)
+        print(f"Created: {directory}")
+
+    print("\n✓ All directories created successfully!")
+
+
+if __name__ == "__main__":
+    main()

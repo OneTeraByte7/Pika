@@ -39,7 +39,8 @@ export const ConnectedAccounts = () => {
   };
 
   const handleDisconnect = async (platform: string) => {
-    if (!confirm(`Are you sure you want to disconnect ${platform}?`)) {
+    // guard `confirm` for SSR
+    if (typeof window === 'undefined' || !window.confirm(`Are you sure you want to disconnect ${platform}?`)) {
       return;
     }
 
@@ -48,9 +49,10 @@ export const ConnectedAccounts = () => {
       await twitterService.disconnectPlatform(platform);
       toast.success(`${platform} disconnected successfully`);
       await loadAccounts();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to disconnect:', error);
-      toast.error(`Failed to disconnect ${platform}`);
+      // @ts-ignore
+      toast.error((error && (error as any).message) || `Failed to disconnect ${platform}`);
     } finally {
       setDisconnecting(null);
     }

@@ -32,20 +32,24 @@ export const useTwitterAuth = () => {
   const connectTwitter = async () => {
     setIsConnecting(true);
     try {
+      if (typeof window === 'undefined') throw new Error('Cannot start OAuth from server side');
+
       // Get authorization URL from backend
       const { auth_url, state } = await twitterService.getAuthUrl();
 
       // Save state for verification
-      localStorage.setItem('twitter_oauth_state', state);
-      
+      window.localStorage.setItem('twitter_oauth_state', state);
+
       // Save current path to return to after OAuth
-      localStorage.setItem('twitter_oauth_return_path', router.pathname);
+      window.localStorage.setItem('twitter_oauth_return_path', router.pathname);
 
       // Redirect to Twitter
       window.location.href = auth_url;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to initiate Twitter OAuth:', error);
-      toast.error(error.message || 'Failed to connect Twitter');
+      // @ts-ignore
+      toast.error((error && (error as any).message) || 'Failed to connect Twitter');
+    } finally {
       setIsConnecting(false);
     }
   };
@@ -56,7 +60,7 @@ export const useTwitterAuth = () => {
   const handleCallback = async (code: string, state: string) => {
     try {
       // Verify state matches
-      const savedState = localStorage.getItem('twitter_oauth_state');
+      const savedState = typeof window !== 'undefined' ? window.localStorage.getItem('twitter_oauth_state') : null;
       if (state !== savedState) {
         throw new Error('Invalid state parameter. Possible CSRF attack.');
       }
@@ -65,7 +69,7 @@ export const useTwitterAuth = () => {
       const result = await twitterService.handleCallback(code, state);
 
       // Clean up
-      localStorage.removeItem('twitter_oauth_state');
+      if (typeof window !== 'undefined') window.localStorage.removeItem('twitter_oauth_state');
 
       // Update connection status
       setIsConnected(true);
@@ -74,16 +78,17 @@ export const useTwitterAuth = () => {
       toast.success(`Twitter account @${result.username} connected successfully!`);
 
       // Get return path
-      const returnPath = localStorage.getItem('twitter_oauth_return_path') || '/dashboard';
-      localStorage.removeItem('twitter_oauth_return_path');
+      const returnPath = typeof window !== 'undefined' ? (window.localStorage.getItem('twitter_oauth_return_path') || '/dashboard') : '/dashboard';
+      if (typeof window !== 'undefined') window.localStorage.removeItem('twitter_oauth_return_path');
 
       // Redirect back to original page
       router.push(returnPath);
 
       return result;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('OAuth callback failed:', error);
-      toast.error(error.message || 'Failed to complete Twitter connection');
+      // @ts-ignore
+      toast.error((error && (error as any).message) || 'Failed to complete Twitter connection');
       throw error;
     }
   };

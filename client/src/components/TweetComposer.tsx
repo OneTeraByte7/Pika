@@ -70,9 +70,10 @@ export const TweetComposer = () => {
         setMediaUrl('');
         setShowMediaInput(false);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to post:', error);
-      toast.error(error.message || 'Failed to post content');
+      // @ts-ignore
+      toast.error((error && (error as any).message) || 'Failed to post content');
     } finally {
       setPosting(false);
     }

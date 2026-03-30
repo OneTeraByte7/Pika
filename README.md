@@ -1,6 +1,6 @@
 # 🎤 Pika - Voice-First Social Media AI Agent
 
-A voice-first AI agent that aggregates all your social media platforms into one conversational interface, designed for GenZ users to eliminate app-switching fatigue.
+A voice-first AI agent that aggregates all your social media platforms into one conversational interface, designed for GenZ users to eliminate app-switching fatigue. Best for GenZ 
 
 ## 📁 Project Structure
 

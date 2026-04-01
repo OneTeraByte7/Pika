@@ -20,6 +20,7 @@ export default function Navbar() {
     { label: 'How it Works', href: '#how-it-works' },
     { label: 'Pricing', href: '#pricing' },
     { label: 'Dashboard', href: '/social-dashboard' },
+    { label: 'Visual Creator', href: '/visual-creator' },
   ];
 
   return (

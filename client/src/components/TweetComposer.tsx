@@ -1,7 +1,8 @@
 // Tweet Composer Component
 import React, { useState } from 'react';
 import { twitterService } from '../services/twitterService';
-import { Twitter, Instagram, Music, Send, Loader2, Image } from 'lucide-react';
+import { Twitter, Instagram, Music, Send, Loader2, Image, Palette } from 'lucide-react';
+import LineOptionsSimple from './LineOptionsSimple';
 import toast from 'react-hot-toast';
 
 const platforms = [
@@ -16,6 +17,8 @@ export const TweetComposer = () => {
   const [mediaUrl, setMediaUrl] = useState('');
   const [posting, setPosting] = useState(false);
   const [showMediaInput, setShowMediaInput] = useState(false);
+  const [showLineOptions, setShowLineOptions] = useState(false);
+  const [selectedLineOption, setSelectedLineOption] = useState(null);
 
   const maxLength = 280;
   const remainingChars = maxLength - content.length;
@@ -26,6 +29,11 @@ export const TweetComposer = () => {
         ? prev.filter(p => p !== platformId)
         : [...prev, platformId]
     );
+  };
+
+  const handleLineOptionSelect = (option) => {
+    setSelectedLineOption(option);
+    toast.success(`Selected ${option.name} for visual content`);
   };
 
   const handlePost = async () => {
@@ -69,6 +77,8 @@ export const TweetComposer = () => {
         setContent('');
         setMediaUrl('');
         setShowMediaInput(false);
+        setShowLineOptions(false);
+        setSelectedLineOption(null);
       }
     } catch (error: unknown) {
       console.error('Failed to post:', error);
@@ -125,13 +135,23 @@ export const TweetComposer = () => {
           maxLength={maxLength}
         />
         <div className="flex justify-between items-center mt-2">
-          <button
-            onClick={() => setShowMediaInput(!showMediaInput)}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500"
-          >
-            <Image size={16} />
-            <span>{showMediaInput ? 'Hide' : 'Add'} Media</span>
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowMediaInput(!showMediaInput)}
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500"
+            >
+              <Image size={16} />
+              <span>{showMediaInput ? 'Hide' : 'Add'} Media</span>
+            </button>
+            
+            <button
+              onClick={() => setShowLineOptions(!showLineOptions)}
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-purple-500"
+            >
+              <Palette size={16} />
+              <span>{showLineOptions ? 'Hide' : 'Show'} Line Options</span>
+            </button>
+          </div>
           <span className={`text-sm ${
             remainingChars < 20 ? 'text-red-500 font-medium' : 'text-gray-500'
           }`}>
@@ -156,6 +176,25 @@ export const TweetComposer = () => {
           <p className="text-xs text-gray-500 mt-1">
             Note: Instagram requires media URL
           </p>
+        </div>
+      )}
+
+      {/* Line Options */}
+      {showLineOptions && (
+        <div className="mb-4 p-4 bg-gray-900 rounded-lg">
+          <LineOptionsSimple 
+            onLineSelect={handleLineOptionSelect}
+            selectedLineId={selectedLineOption?.id}
+          />
+          {selectedLineOption && (
+            <div className="mt-4 p-3 bg-white/10 rounded-lg">
+              <p className="text-white text-sm">
+                ✨ Line option selected: <strong>{selectedLineOption.name}</strong>
+                <br />
+                <span className="text-white/70">Perfect for creating visual content with styled borders and dividers!</span>
+              </p>
+            </div>
+          )}
         </div>
       )}
 

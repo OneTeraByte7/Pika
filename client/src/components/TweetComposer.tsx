@@ -1,8 +1,10 @@
 // Tweet Composer Component
 import React, { useState } from 'react';
 import { twitterService } from '../services/twitterService';
-import { Twitter, Instagram, Music, Send, Loader2, Image, Palette } from 'lucide-react';
+import { Twitter, Instagram, Music, Send, Loader2, Image, Palette, AlertCircle } from 'lucide-react';
 import LineOptionsSimple from './LineOptionsSimple';
+import ImageUploader from './ImageUploader';
+import ImageHandler from '../services/imageHandler';
 import toast from 'react-hot-toast';
 
 const platforms = [
@@ -15,10 +17,13 @@ export const TweetComposer = () => {
   const [content, setContent] = useState('');
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(['twitter']);
   const [mediaUrl, setMediaUrl] = useState('');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [posting, setPosting] = useState(false);
   const [showMediaInput, setShowMediaInput] = useState(false);
   const [showLineOptions, setShowLineOptions] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
   const [selectedLineOption, setSelectedLineOption] = useState(null);
+  const [imageValidationError, setImageValidationError] = useState<string | null>(null);
 
   const maxLength = 280;
   const remainingChars = maxLength - content.length;
@@ -34,6 +39,40 @@ export const TweetComposer = () => {
   const handleLineOptionSelect = (option) => {
     setSelectedLineOption(option);
     toast.success(`Selected ${option.name} for visual content`);
+  };
+
+  const handleImageSelect = async (file: File | null) => {
+    setImageValidationError(null);
+    
+    if (!file) {
+      setSelectedImage(null);
+      return;
+    }
+
+    try {
+      // Validate the image
+      const validation = await ImageHandler.validateImage(file);
+      
+      if (!validation.isValid) {
+        setImageValidationError(validation.error || 'Invalid image file');
+        toast.error(validation.error || 'Invalid image file');
+        return;
+      }
+
+      // If validation passes, set the image
+      setSelectedImage(file);
+      toast.success(`Image uploaded successfully (${validation.dimensions?.width}x${validation.dimensions?.height})`);
+      
+      // Auto-close URL input if image is uploaded
+      if (showMediaInput) {
+        setShowMediaInput(false);
+        setMediaUrl('');
+      }
+    } catch (error) {
+      const errorMsg = 'Failed to process image file';
+      setImageValidationError(errorMsg);
+      toast.error(errorMsg);
+    }
   };
 
   const handlePost = async () => {
@@ -52,12 +91,27 @@ export const TweetComposer = () => {
       return;
     }
 
+    // If Instagram is selected, require media
+    if (selectedPlatforms.includes('instagram') && !mediaUrl && !selectedImage) {
+      toast.error('Instagram requires an image. Please upload an image or provide a URL.');
+      return;
+    }
+
     try {
       setPosting(true);
+      
+      let finalMediaUrl = mediaUrl;
+      
+      // If we have an uploaded image, we would typically upload it to a server here
+      // For now, we'll create a local URL for demonstration
+      if (selectedImage && !mediaUrl) {
+        finalMediaUrl = URL.createObjectURL(selectedImage);
+      }
+      
       const result = await twitterService.postContent(
         selectedPlatforms,
         content,
-        mediaUrl || undefined
+        finalMediaUrl || undefined
       );
 
       // Show results
@@ -76,9 +130,12 @@ export const TweetComposer = () => {
       if (failed.length === 0) {
         setContent('');
         setMediaUrl('');
+        setSelectedImage(null);
         setShowMediaInput(false);
         setShowLineOptions(false);
+        setShowImageUpload(false);
         setSelectedLineOption(null);
+        setImageValidationError(null);
       }
     } catch (error: unknown) {
       console.error('Failed to post:', error);
@@ -119,6 +176,12 @@ export const TweetComposer = () => {
             );
           })}
         </div>
+        {selectedPlatforms.includes('instagram') && !mediaUrl && !selectedImage && (
+          <p className="text-xs text-orange-600 mt-1 flex items-center gap-1">
+            <AlertCircle size={12} />
+            Instagram requires an image
+          </p>
+        )}
       </div>
 
       {/* Content Input */}
@@ -135,13 +198,21 @@ export const TweetComposer = () => {
           maxLength={maxLength}
         />
         <div className="flex justify-between items-center mt-2">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <button
               onClick={() => setShowMediaInput(!showMediaInput)}
               className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500"
             >
               <Image size={16} />
-              <span>{showMediaInput ? 'Hide' : 'Add'} Media</span>
+              <span>{showMediaInput ? 'Hide' : 'Add'} Media URL</span>
+            </button>
+            
+            <button
+              onClick={() => setShowImageUpload(!showImageUpload)}
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-green-500"
+            >
+              <Image size={16} />
+              <span>{showImageUpload ? 'Hide' : 'Upload'} Image</span>
             </button>
             
             <button
@@ -174,8 +245,26 @@ export const TweetComposer = () => {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Note: Instagram requires media URL
+            Note: Instagram requires media content
           </p>
+        </div>
+      )}
+
+      {/* Image Upload */}
+      {showImageUpload && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Upload Image
+          </label>
+          <ImageUploader
+            onImageSelect={handleImageSelect}
+            placeholder="Upload an image for your post"
+          />
+          {imageValidationError && (
+            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-600 text-sm">
+              {imageValidationError}
+            </div>
+          )}
         </div>
       )}
 
@@ -193,6 +282,23 @@ export const TweetComposer = () => {
                 <br />
                 <span className="text-white/70">Perfect for creating visual content with styled borders and dividers!</span>
               </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Selected Image/Media Preview */}
+      {(selectedImage || mediaUrl) && (
+        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+          <p className="text-sm font-medium text-gray-700 mb-2">Media attached:</p>
+          {selectedImage && (
+            <div className="text-sm text-gray-600">
+              📎 {selectedImage.name} ({(selectedImage.size / 1024 / 1024).toFixed(2)} MB)
+            </div>
+          )}
+          {mediaUrl && (
+            <div className="text-sm text-gray-600">
+              🔗 {mediaUrl}
             </div>
           )}
         </div>

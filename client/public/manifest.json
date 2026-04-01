@@ -4,29 +4,29 @@
   "description": "Manage all your social media platforms with just your voice",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#667eea",
+  "background_color": "#000000",
+  "theme_color": "#00f2ff",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "/icon-192x192.svg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "/icon-512x512.svg",
+      "sizes": "512x512", 
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
   "categories": ["social", "productivity", "utilities"],
   "screenshots": [
     {
-      "src": "/screenshot1.png",
+      "src": "/screenshot1.svg",
       "sizes": "1280x720",
-      "type": "image/png"
+      "type": "image/svg+xml"
     }
   ],
   "shortcuts": [
@@ -35,14 +35,14 @@
       "short_name": "Voice",
       "description": "Start voice conversation",
       "url": "/app",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192x192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     },
     {
       "name": "Morning Brief",
-      "short_name": "Brief",
+      "short_name": "Brief", 
       "description": "View your daily briefing",
       "url": "/app",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192x192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     }
   ]
 }

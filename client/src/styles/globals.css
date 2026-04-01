@@ -84,6 +84,60 @@
   opacity: 0.03;
 }
 
+/* Line Options Utility Classes */
+.line-electric-blue {
+  stroke: var(--electric-blue);
+}
+
+.line-neon-green {
+  stroke: var(--neon-green);
+}
+
+.line-hot-pink {
+  stroke: var(--hot-pink);
+}
+
+.line-vivid-purple {
+  stroke: var(--vivid-purple);
+}
+
+.line-cyber-yellow {
+  stroke: var(--cyber-yellow);
+}
+
+/* Enhanced Glass Card Effects */
+.glass-card-enhanced {
+  @apply bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-8 hover:border-white/20 transition-all duration-500 relative overflow-hidden;
+}
+
+.glass-card-enhanced::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, rgba(0, 242, 255, 0.1), transparent);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glass-card-enhanced:hover::before {
+  opacity: 1;
+}
+
+/* Drawing Canvas Styles */
+.drawing-canvas {
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(0, 242, 255, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(189, 0, 255, 0.02) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 24%, rgba(255, 255, 255, 0.01) 25%, rgba(255, 255, 255, 0.01) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.01) 75%, rgba(255, 255, 255, 0.01) 76%, transparent 77%);
+  background-size: 50px 50px;
+}
+
 /* Smooth transitions */
 * {
   transition-property: background-color, border-color, color, fill, stroke, transform, box-shadow;

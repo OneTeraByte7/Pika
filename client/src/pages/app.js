@@ -168,7 +168,7 @@ export default function App() {
                         initial={{ opacity: 0, scale: 0.9, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                        className="absolute right-0 mt-4 w-64 glass-card p-2 z-50 border-white/20"
+                        className="absolute right-0 mt-4 w-64 bg-[#0b1220] border border-white/10 rounded-2xl p-2 z-50 shadow-lg"
                       >
                         {moreMenuItems.map((item) => {
                           const Icon = item.icon;

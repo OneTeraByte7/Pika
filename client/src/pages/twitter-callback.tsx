@@ -6,7 +6,7 @@ import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 
 export default function TwitterCallback() {
   const router = useRouter();
-  const { handleCallback } = useTwitterAuth();
+  const { handleCallback, connectTwitter } = useTwitterAuth();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('Connecting your Twitter account...');
 
@@ -78,9 +78,22 @@ export default function TwitterCallback() {
                 Connection Failed
               </h2>
               <p className="text-gray-600">{message}</p>
-              <p className="text-sm text-gray-500 mt-4">
-                Redirecting back...
-              </p>
+              <p className="text-sm text-gray-500 mt-4">Redirecting back...</p>
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <button
+                  onClick={() => connectTwitter()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Try Again
+                </button>
+
+                <button
+                  onClick={() => router.push('/social-dashboard')}
+                  className="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Back to Dashboard
+                </button>
+              </div>
             </>
           )}
         </div>

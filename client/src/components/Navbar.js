@@ -19,7 +19,6 @@ export default function Navbar() {
     { label: 'Features', href: '#features' },
     { label: 'How it Works', href: '#how-it-works' },
     { label: 'Pricing', href: '#pricing' },
-    { label: 'Dashboard', href: '/social-dashboard' },
     { label: 'Visual Creator', href: '/visual-creator' },
   ];
 
@@ -67,16 +66,7 @@ export default function Navbar() {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-6">
-            <Link href="/social-dashboard" className="hidden sm:block">
-              <motion.button
-                whileHover={{ scale: 1.05, x: 5 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-white/70 hover:text-white transition-colors"
-              >
-                <span>Login</span>
-                <ChevronRight className="w-4 h-4 text-electric-blue" />
-              </motion.button>
-            </Link>
+            {/* (Dashboard link removed - moved into app More menu) */}
 
             <Link href="/app">
               <motion.button

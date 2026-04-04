@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Sparkles, Home, MessageSquare, PlusCircle, BarChart3, User, Settings, Menu, Calendar, Bell, Lightbulb, Download, Activity, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +21,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('pika');
   const [showBriefing, setShowBriefing] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const router = useRouter();
   const { briefing } = usePikaStore();
 
   const tabs = [
@@ -29,6 +31,7 @@ export default function App() {
   ];
 
   const moreMenuItems = [
+    { id: 'social-dashboard', label: 'Dashboard', icon: Home },
     { id: 'scheduler', label: 'Scheduler', icon: Calendar },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'recommendations', label: 'AI Ideas', icon: Lightbulb },
@@ -177,6 +180,13 @@ export default function App() {
                             <button
                               key={item.id}
                               onClick={() => {
+                                // If this item is the social dashboard, navigate to the page.
+                                if (item.id === 'social-dashboard') {
+                                  router.push('/social-dashboard');
+                                  setShowMoreMenu(false);
+                                  return;
+                                }
+
                                 setActiveTab(item.id);
                                 setShowMoreMenu(false);
                               }}

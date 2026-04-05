@@ -20,10 +20,10 @@ oauth_states = {}
 async def get_twitter_auth_url(current_user: User = Depends(get_current_user)):
     """Generate Twitter OAuth 2.0 authorization URL"""
     
-    if not settings.TWITTER_API_KEY or not settings.TWITTER_API_SECRET:
+    if not settings.TWITTER_CLIENT_ID or not settings.TWITTER_CLIENT_SECRET:
         raise HTTPException(
             status_code=500,
-            detail="Twitter API credentials not configured"
+            detail="Twitter OAuth client credentials not configured"
         )
     
     # Generate state for CSRF protection
@@ -43,7 +43,7 @@ async def get_twitter_auth_url(current_user: User = Depends(get_current_user)):
     
     params = {
         "response_type": "code",
-        "client_id": settings.TWITTER_API_KEY,
+        "client_id": settings.TWITTER_CLIENT_ID,
         "redirect_uri": f"{settings.FRONTEND_URL}/twitter-callback",
         "scope": " ".join(scopes),
         "state": state,
@@ -80,7 +80,7 @@ async def twitter_callback(
     data = {
         "code": code,
         "grant_type": "authorization_code",
-        "client_id": settings.TWITTER_API_KEY,
+        "client_id": settings.TWITTER_CLIENT_ID,
         "redirect_uri": f"{settings.FRONTEND_URL}/twitter-callback",
         "code_verifier": "challenge"
     }
@@ -90,7 +90,7 @@ async def twitter_callback(
             response = await client.post(
                 token_url,
                 data=data,
-                auth=(settings.TWITTER_API_KEY, settings.TWITTER_API_SECRET)
+                auth=(settings.TWITTER_CLIENT_ID, settings.TWITTER_CLIENT_SECRET)
             )
             
             if response.status_code != 200:
@@ -209,7 +209,7 @@ async def refresh_twitter_token(current_user: User = Depends(get_current_user)):
     data = {
         "grant_type": "refresh_token",
         "refresh_token": account["refresh_token"],
-        "client_id": settings.TWITTER_API_KEY
+        "client_id": settings.TWITTER_CLIENT_ID
     }
     
     try:
@@ -217,7 +217,7 @@ async def refresh_twitter_token(current_user: User = Depends(get_current_user)):
             response = await client.post(
                 token_url,
                 data=data,
-                auth=(settings.TWITTER_API_KEY, settings.TWITTER_API_SECRET)
+                auth=(settings.TWITTER_CLIENT_ID, settings.TWITTER_CLIENT_SECRET)
             )
             
             if response.status_code != 200:

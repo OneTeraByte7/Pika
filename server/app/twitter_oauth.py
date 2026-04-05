@@ -4,6 +4,8 @@ from typing import Optional
 import httpx
 from urllib.parse import urlencode
 import secrets
+import hashlib
+import base64
 from datetime import datetime
 
 from server.models.database import User, SocialAccount
@@ -26,9 +28,20 @@ async def get_twitter_auth_url(current_user: User = Depends(get_current_user)):
             detail="Twitter OAuth client credentials not configured"
         )
     
-    # Generate state for CSRF protection
+    # Generate state for CSRF protection and PKCE code_verifier
     state = secrets.token_urlsafe(32)
-    oauth_states[state] = str(current_user.id)
+    # PKCE code_verifier (high-entropy random string)
+    code_verifier = secrets.token_urlsafe(64)
+
+    # Create code_challenge using S256 (base64url of sha256)
+    digest = hashlib.sha256(code_verifier.encode('utf-8')).digest()
+    code_challenge = base64.urlsafe_b64encode(digest).rstrip(b"=").decode('utf-8')
+
+    # Store both user id and verifier for this state
+    oauth_states[state] = {
+        'user_id': str(current_user.id),
+        'code_verifier': code_verifier
+    }
     
     # Twitter OAuth 2.0 authorization URL
     base_url = "https://twitter.com/i/oauth2/authorize"
@@ -47,8 +60,8 @@ async def get_twitter_auth_url(current_user: User = Depends(get_current_user)):
         "redirect_uri": f"{settings.FRONTEND_URL}/twitter-callback",
         "scope": " ".join(scopes),
         "state": state,
-        "code_challenge": "challenge",
-        "code_challenge_method": "plain"
+        "code_challenge": code_challenge,
+        "code_challenge_method": "S256"
     }
     
     auth_url = f"{base_url}?{urlencode(params)}"
@@ -77,12 +90,18 @@ async def twitter_callback(
     # Exchange code for access token
     token_url = "https://api.twitter.com/2/oauth2/token"
     
+    # Retrieve stored PKCE verifier for this state
+    stored = oauth_states.get(state)
+    code_verifier = None
+    if isinstance(stored, dict):
+        code_verifier = stored.get('code_verifier')
+
     data = {
         "code": code,
         "grant_type": "authorization_code",
         "client_id": settings.TWITTER_CLIENT_ID,
         "redirect_uri": f"{settings.FRONTEND_URL}/twitter-callback",
-        "code_verifier": "challenge"
+        "code_verifier": code_verifier or ""
     }
     
     try:

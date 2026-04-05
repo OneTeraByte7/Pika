@@ -11,9 +11,9 @@ export default function Hero() {
         <div className="absolute inset-0 bg-grid-glow opacity-30" />
         <div className="absolute inset-0 bg-noise" />
 
-        {/* Cinematic Glows */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-vivid-purple/20 blur-[120px] rounded-full animate-pulse-slow" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-electric-blue/10 blur-[120px] rounded-full animate-glow" />
+        {/* Cinematic Glows (hidden on small screens) */}
+        <div className="hidden md:block absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-vivid-purple/20 blur-[120px] rounded-full animate-pulse-slow" />
+        <div className="hidden md:block absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-electric-blue/10 blur-[120px] rounded-full animate-glow" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 w-full">
@@ -95,7 +95,7 @@ export default function Hero() {
                 rotate: [0, 10, 0]
               }}
               transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-[20%] left-[10%] w-32 h-32 bg-white/5 border border-white/10 rounded-[40px] backdrop-blur-xl flex items-center justify-center"
+              className="hidden md:flex absolute top-[20%] left-[10%] w-32 h-32 bg-white/5 border border-white/10 rounded-[40px] backdrop-blur-xl flex items-center justify-center"
             >
               <Command className="w-10 h-10 text-electric-blue/50" />
             </motion.div>
@@ -106,7 +106,7 @@ export default function Hero() {
                 rotate: [0, -10, 0]
               }}
               transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute bottom-[20%] right-[10%] w-40 h-40 bg-white/5 border border-white/10 rounded-[60px] backdrop-blur-xl flex items-center justify-center shadow-neon-purple"
+              className="hidden md:flex absolute bottom-[20%] right-[10%] w-40 h-40 bg-white/5 border border-white/10 rounded-[60px] backdrop-blur-xl flex items-center justify-center shadow-neon-purple"
             >
               <div className="w-full px-6 space-y-3">
                 <div className="h-2 w-[80%] bg-vivid-purple/30 rounded-full" />
@@ -121,7 +121,7 @@ export default function Hero() {
                 key={i}
                 animate={{ opacity: [0.2, 0.8, 0.2] }}
                 transition={{ duration: 2 + i % 3, repeat: Infinity }}
-                className="absolute w-1 h-1 bg-white rounded-full"
+                className="hidden md:block absolute w-1 h-1 bg-white rounded-full"
                 style={{
                   top: `${Math.random() * 100}%`,
                   left: `${Math.random() * 100}%`,

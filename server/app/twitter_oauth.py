@@ -79,23 +79,22 @@ async def twitter_callback(
 ):
     """Handle Twitter OAuth callback and exchange code for tokens"""
     
-    # Verify state
+    # Verify state and retrieve stored PKCE data
     if state not in oauth_states:
         raise HTTPException(status_code=400, detail="Invalid state parameter")
-    
-    user_id = oauth_states.pop(state)
+
+    stored = oauth_states.pop(state, None)
+    if not stored or not isinstance(stored, dict):
+        raise HTTPException(status_code=400, detail="Invalid stored state data")
+
+    user_id = stored.get('user_id')
+    code_verifier = stored.get('code_verifier')
     if user_id != str(current_user.id):
         raise HTTPException(status_code=403, detail="User mismatch")
-    
+
     # Exchange code for access token
     token_url = "https://api.twitter.com/2/oauth2/token"
     
-    # Retrieve stored PKCE verifier for this state
-    stored = oauth_states.get(state)
-    code_verifier = None
-    if isinstance(stored, dict):
-        code_verifier = stored.get('code_verifier')
-
     data = {
         "code": code,
         "grant_type": "authorization_code",
@@ -113,9 +112,15 @@ async def twitter_callback(
             )
             
             if response.status_code != 200:
+                # Log detailed response for debugging
+                try:
+                    text = response.text
+                except Exception:
+                    text = '<unable to read response text>'
+                print(f"Twitter token exchange failed: status={response.status_code} body={text}")
                 raise HTTPException(
                     status_code=400,
-                    detail=f"Failed to get access token: {response.text}"
+                    detail=f"Failed to get access token: {text}"
                 )
             
             token_data = response.json()

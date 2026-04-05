@@ -94,14 +94,14 @@ export default function HowItWorks() {
                   transition={{ delay: index * 0.1 }}
                   className="group relative"
                 >
-                  <div className="glass-card relative z-10 h-full hover:border-white/30 transition-all duration-500 overflow-hidden">
+                  <div className="glass-card relative z-10 h-full hover:border-white/30 transition-all duration-500 overflow-hidden text-center md:text-left">
                     {/* Background Number */}
                     <span className="absolute -top-10 -right-6 text-9xl font-black text-white/[0.03] select-none group-hover:text-white/[0.05] transition-colors">
                       {step.number}
                     </span>
 
                     <div className="relative">
-                      <div className={`w-16 h-16 rounded-2xl bg-${step.color}/10 border border-${step.color}/20 flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500`}>
+                        <div className={`w-16 h-16 rounded-2xl bg-${step.color}/10 border border-${step.color}/20 flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 mx-auto md:mx-0`}>
                         <Icon className={`w-8 h-8 text-${step.color}`} />
                       </div>
 

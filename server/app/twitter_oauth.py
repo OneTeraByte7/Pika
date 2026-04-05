@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Body
 from fastapi.responses import RedirectResponse
 from typing import Optional
 import httpx
@@ -42,6 +42,7 @@ async def get_twitter_auth_url(current_user: User = Depends(get_current_user)):
         'user_id': str(current_user.id),
         'code_verifier': code_verifier
     }
+    print(f"[twitter_oauth] created state={state} for user={current_user.id}")
     
     # Twitter OAuth 2.0 authorization URL
     base_url = "https://twitter.com/i/oauth2/authorize"
@@ -73,19 +74,18 @@ async def get_twitter_auth_url(current_user: User = Depends(get_current_user)):
 
 @router.post("/auth/callback")
 async def twitter_callback(
-    code: str,
-    state: str,
+    code: str = Body(...),
+    state: str = Body(...),
     current_user: User = Depends(get_current_user)
 ):
     """Handle Twitter OAuth callback and exchange code for tokens"""
-    
-    # Verify state and retrieve stored PKCE data
-    if state not in oauth_states:
-        raise HTTPException(status_code=400, detail="Invalid state parameter")
+    print(f"[twitter_oauth] callback received code={code} state={state} user={current_user.id}")
+    print(f"[twitter_oauth] stored states keys={list(oauth_states.keys())}")
 
+    # Verify state and retrieve stored PKCE data
     stored = oauth_states.pop(state, None)
     if not stored or not isinstance(stored, dict):
-        raise HTTPException(status_code=400, detail="Invalid stored state data")
+        raise HTTPException(status_code=400, detail="Invalid or expired state parameter")
 
     user_id = stored.get('user_id')
     code_verifier = stored.get('code_verifier')
@@ -94,7 +94,7 @@ async def twitter_callback(
 
     # Exchange code for access token
     token_url = "https://api.twitter.com/2/oauth2/token"
-    
+
     data = {
         "code": code,
         "grant_type": "authorization_code",
@@ -112,11 +112,10 @@ async def twitter_callback(
             )
             
             if response.status_code != 200:
-                # Log detailed response for debugging
                 try:
                     text = response.text
                 except Exception:
-                    text = '<unable to read response text>'
+                    text = '<unreadable response>'
                 print(f"Twitter token exchange failed: status={response.status_code} body={text}")
                 raise HTTPException(
                     status_code=400,

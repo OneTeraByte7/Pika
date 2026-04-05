@@ -17,6 +17,7 @@ interface DrawnLine {
 
 export const VisualContentCreator: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentLineOption, setCurrentLineOption] = useState(null);
   const [drawnLines, setDrawnLines] = useState<DrawnLine[]>([]);
@@ -30,65 +31,65 @@ export const VisualContentCreator: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const scale = canvas.width / (canvas.clientWidth || 1);
+
     // Clear canvas
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Redraw all lines
+    // Redraw all lines (scale points to canvas pixel ratio)
     drawnLines.forEach(line => {
       if (line.points.length > 1) {
-        drawLine(ctx, line.points, line.lineOption);
+        drawLine(ctx, line.points, line.lineOption, scale);
       }
     });
 
     // Draw current line being drawn
     if (currentLine.length > 1 && currentLineOption) {
-      drawLine(ctx, currentLine, currentLineOption);
+      drawLine(ctx, currentLine, currentLineOption, scale);
     }
   }, [drawnLines, currentLine, currentLineOption]);
 
-  const drawLine = (ctx: CanvasRenderingContext2D, points: DrawingPoint[], lineOption: any) => {
+  const drawLine = (ctx: CanvasRenderingContext2D, points: DrawingPoint[], lineOption: any, scale = 1) => {
     if (!lineOption || points.length < 2) return;
 
     ctx.save();
-    
-    // Set line properties
-    ctx.lineWidth = lineOption.strokeWidth;
-    ctx.lineCap = lineOption.strokeLinecap;
+
+    // Set line properties (scale line width for pixel ratio)
+    ctx.lineWidth = (lineOption.strokeWidth || 2) * scale;
+    ctx.lineCap = lineOption.strokeLinecap || 'round';
     ctx.strokeStyle = getColorValue(lineOption.color);
-    
+
     if (lineOption.strokeDasharray) {
-      const dashArray = lineOption.strokeDasharray.split(' ').map(Number);
+      const dashArray = lineOption.strokeDasharray.split(' ').map(Number).map(n => n * scale);
       ctx.setLineDash(dashArray);
     } else {
       ctx.setLineDash([]);
     }
 
-    // Draw the line
+    // Draw the line (scale point coordinates)
     ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    
+    ctx.moveTo(points[0].x * scale, points[0].y * scale);
+
     if (lineOption.id === 'zigzag') {
-      // Draw zigzag pattern
       for (let i = 1; i < points.length; i++) {
         const prevPoint = points[i - 1];
         const currentPoint = points[i];
         const segments = 5;
-        
+
         for (let j = 0; j <= segments; j++) {
           const t = j / segments;
-          const x = prevPoint.x + (currentPoint.x - prevPoint.x) * t;
-          const y = prevPoint.y + (currentPoint.y - prevPoint.y) * t + Math.sin(t * Math.PI * 4) * 10;
+          const x = (prevPoint.x + (currentPoint.x - prevPoint.x) * t) * scale;
+          const y = (prevPoint.y + (currentPoint.y - prevPoint.y) * t + Math.sin(t * Math.PI * 4) * 10) * scale;
           ctx.lineTo(x, y);
         }
       }
     } else {
-      // Draw normal line
       for (let i = 1; i < points.length; i++) {
-        ctx.lineTo(points[i].x, points[i].y);
+        ctx.lineTo(points[i].x * scale, points[i].y * scale);
       }
     }
-    
+
     ctx.stroke();
     ctx.restore();
   };
@@ -104,29 +105,52 @@ export const VisualContentCreator: React.FC = () => {
     return colorMap[colorName] || '#00f2ff';
   };
 
-  const getMousePos = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const getMousePos = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
-    
+
     const rect = canvas.getBoundingClientRect();
     return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: clientX - rect.left,
+      y: clientY - rect.top
     };
   };
 
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!currentLineOption) return;
-    
+
     setIsDrawing(true);
-    const pos = getMousePos(e);
+    // Prevent page scrolling while drawing
+    try { document.body.style.overflow = 'hidden'; } catch (err) {}
+    const pos = getMousePos(e.clientX, e.clientY);
+    setCurrentLine([pos]);
+  };
+
+  const startDrawingTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!currentLineOption) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    if (!touch) return;
+    setIsDrawing(true);
+    // Prevent page scrolling while drawing on touch
+    try { document.body.style.overflow = 'hidden'; } catch (err) {}
+    const pos = getMousePos(touch.clientX, touch.clientY);
     setCurrentLine([pos]);
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing || !currentLineOption) return;
-    
-    const pos = getMousePos(e);
+
+    const pos = getMousePos(e.clientX, e.clientY);
+    setCurrentLine(prev => [...prev, pos]);
+  };
+
+  const drawTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDrawing || !currentLineOption) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    if (!touch) return;
+    const pos = getMousePos(touch.clientX, touch.clientY);
     setCurrentLine(prev => [...prev, pos]);
   };
 
@@ -134,6 +158,7 @@ export const VisualContentCreator: React.FC = () => {
     if (!isDrawing || currentLine.length < 2) {
       setIsDrawing(false);
       setCurrentLine([]);
+      try { document.body.style.overflow = ''; } catch (err) {}
       return;
     }
     
@@ -147,7 +172,44 @@ export const VisualContentCreator: React.FC = () => {
     setDrawnLines(prev => [...prev, newLine]);
     setCurrentLine([]);
     setIsDrawing(false);
+    try { document.body.style.overflow = ''; } catch (err) {}
   };
+
+  // Resize canvas to be responsive and handle DPR
+  useEffect(() => {
+    const resizeCanvas = () => {
+      const canvas = canvasRef.current;
+      const container = containerRef.current;
+      if (!canvas || !container) return;
+
+      const width = container.clientWidth;
+      const aspect = 600 / 800; // preserve original aspect ratio
+      const height = Math.floor(width * aspect);
+      const dpr = window.devicePixelRatio || 1;
+
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+
+      // Trigger a redraw by using the current state (effect above will run)
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const scale = canvas.width / (canvas.clientWidth || 1);
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawnLines.forEach(line => {
+          if (line.points.length > 1) {
+            drawLine(ctx, line.points, line.lineOption, scale);
+          }
+        });
+      }
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener('resize', resizeCanvas);
+  }, [drawnLines]);
 
   const clearCanvas = () => {
     setDrawnLines([]);
@@ -183,7 +245,7 @@ export const VisualContentCreator: React.FC = () => {
 
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Line Options Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 w-full mx-auto">
             <LineOptionsUI
               onLineSelect={setCurrentLineOption}
               className="mb-6"
@@ -232,7 +294,7 @@ export const VisualContentCreator: React.FC = () => {
           </div>
 
           {/* Canvas Area */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 w-full">
             <div className="glass-card">
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -253,16 +315,21 @@ export const VisualContentCreator: React.FC = () => {
                 </div>
               </div>
               
-              <div className="relative bg-pitch-black border-2 border-white/10 rounded-2xl overflow-hidden">
+              <div ref={containerRef} className="relative bg-pitch-black border-2 border-white/10 rounded-2xl overflow-hidden">
                 <canvas
                   ref={canvasRef}
                   width={canvasSize.width}
                   height={canvasSize.height}
-                  className={`w-full h-auto ${currentLineOption ? 'cursor-crosshair' : 'cursor-not-allowed'}`}
+                  className={`w-full h-auto ${currentLineOption ? 'cursor-crosshair' : 'cursor-not-allowed'} touch-none`}
                   onMouseDown={startDrawing}
                   onMouseMove={draw}
                   onMouseUp={stopDrawing}
                   onMouseLeave={stopDrawing}
+                  onTouchStart={startDrawingTouch}
+                  onTouchMove={drawTouch}
+                  onTouchEnd={stopDrawing}
+                  onTouchCancel={stopDrawing}
+                  onContextMenu={(e) => e.preventDefault()}
                 />
                 
                 {!currentLineOption && (

@@ -90,7 +90,7 @@ export default function Features() {
               >
                 <div className="relative z-10 flex flex-col h-full justify-between">
                   <div className="mb-12">
-                    <div className={`w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-${feature.color}/20 group-hover:border-${feature.color}/50 transition-all duration-500`}>
+                    <div className={`w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-${feature.color}/20 group-hover:border-${feature.color}/50 transition-all duration-500 mx-auto`}>
                       <Icon className={`w-8 h-8 text-${feature.color}`} />
                     </div>
                     <h3 className="text-3xl font-black uppercase tracking-tight text-white mb-4">

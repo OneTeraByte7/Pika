@@ -14,6 +14,10 @@ router = APIRouter(prefix = "/auth", tags = ["authentication"])
 pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "/auth/login", auto_error=False)
 
+# Demo user (used when DEBUG and no token provided). Create once so the id is stable across requests.
+from bson import ObjectId
+_DEMO_USER = None
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -39,14 +43,16 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     # If no token provided (or token is empty/invalid string) and we're in DEBUG,
     # return a demo user for local testing
     if (not token or token in ("null", "undefined", "")) and settings.DEBUG:
-        from bson import ObjectId
-        return User(
-            _id=ObjectId(),  # Generate a valid ObjectId
-            email='user@example.com',
-            username='demo',
-            hashed_password='demo_hash',
-            full_name='Demo User'
-        )
+        global _DEMO_USER
+        if _DEMO_USER is None:
+            _DEMO_USER = User(
+                _id=ObjectId('000000000000000000000000'),
+                email='user@example.com',
+                username='demo',
+                hashed_password='demo_hash',
+                full_name='Demo User'
+            )
+        return _DEMO_USER
 
     credentials_exception = HTTPException(
         status_code = status.HTTP_401_UNAUTHORIZED,

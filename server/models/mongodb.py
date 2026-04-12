@@ -8,17 +8,15 @@ class MongoDB:
     @classmethod
     async def connect_db(cls):
         """Connect to MongoDB"""
-        print(f"Attempting to connect to MongoDB...")
-        print(f"DATABASE_URL length: {len(settings.DATABASE_URL)}")
-        print(f"DATABASE_URL starts with: {settings.DATABASE_URL[:30] if settings.DATABASE_URL else 'EMPTY'}")
-        
+        print("Attempting to connect to MongoDB...")
         if not settings.DATABASE_URL or settings.DATABASE_URL.strip() == "":
             raise Exception("DATABASE_URL is not set in environment variables")
-        
+
+        # Avoid printing the raw DATABASE_URL to logs
         cls.client = AsyncIOMotorClient(settings.DATABASE_URL)
         # Test the connection
         await cls.client.admin.command('ping')
-        print(f"✅ Connected to MongoDB Atlas")
+        print("✅ Connected to MongoDB")
         
     @classmethod
     async def close_db(cls):
@@ -37,6 +35,16 @@ class MongoDB:
 # Database instance
 def get_db():
     return MongoDB.get_database()
+
+def is_db_connected():
+    try:
+        if MongoDB.client is None:
+            return False
+        # perform a lightweight ping
+        MongoDB.client.admin.command('ping')
+        return True
+    except Exception:
+        return False
 
 # Collection names
 COLLECTIONS = {

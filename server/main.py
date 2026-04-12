@@ -11,11 +11,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 from server.config.settings import settings
 from server.app import auth, pika, social, twitter_oauth, instagram_oauth
 from server.models.mongodb import MongoDB
 from server.middleware.request_logger import RequestLoggerMiddleware
+from server.app.error_handlers import register_error_handlers
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,6 +35,9 @@ app = FastAPI(
     description = "Voice-first social media AI agent for GenZ",
     lifespan = lifespan
 )
+
+# Register centralized error handlers
+register_error_handlers(app)
 
 import json
 
@@ -73,9 +78,16 @@ async def root():
     
 app.get("/health")
 async def health_check():
-    return{
+    db_status = False
+    try:
+        db_status = MongoDB.client is not None
+    except Exception:
+        db_status = False
+
+    return {
         "status": "healthy",
-        "timestamp": "2024-01-20T12:00:00Z"
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "db_connected": db_status
     }
     
 if __name__ == "__main__":

@@ -3,7 +3,14 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from datetime import datetime
 import json
 from typing import Callable
+import logging
 from server.models.mongodb import get_db, COLLECTIONS
+
+logger = logging.getLogger("pika.request")
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 class RequestLoggerMiddleware(BaseHTTPMiddleware):
     """Middleware to log all API requests to MongoDB"""
@@ -63,6 +70,21 @@ class RequestLoggerMiddleware(BaseHTTPMiddleware):
                 "response_time": response_time
             })
         except Exception as e:
-            print(f"Error logging request: {e}")
+            logger.exception(f"Error logging request to MongoDB: {e}")
+
+        # Also emit structured JSON log to console for observability
+        try:
+            console_entry = {
+                "timestamp": request_time.isoformat() + "Z",
+                "method": request.method,
+                "path": request.url.path,
+                "status_code": response.status_code,
+                "duration_ms": duration_ms,
+                "client_ip": request.client.host if request.client else None,
+                "user_id": user_id
+            }
+            logger.info(json.dumps(console_entry, default=str))
+        except Exception:
+            pass
         
         return response

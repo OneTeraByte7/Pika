@@ -49,4 +49,9 @@ class Settings(BaseSettings):
 print(f"Loading settings from: {ENV_FILE}")
 print(f".env file exists: {ENV_FILE.exists()}")
 settings = Settings()
-print(f"DATABASE_URL loaded: {settings.DATABASE_URL[:50] if settings.DATABASE_URL else 'NOT SET'}...")
+# Avoid printing secrets or exposing database URLs; only indicate presence
+print(f"DATABASE_URL set: {'YES' if settings.DATABASE_URL else 'NO'})")
+if settings.SECRET_KEY:
+    print("SECRET_KEY set: YES")
+else:
+    print("SECRET_KEY set: NO - using insecure default")

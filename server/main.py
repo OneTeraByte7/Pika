@@ -15,6 +15,7 @@ from datetime import datetime
 
 from server.config.settings import settings
 from server.app import auth, pika, social, twitter_oauth, instagram_oauth
+from server.app import media_api
 from server.models.mongodb import MongoDB
 from server.middleware.request_logger import RequestLoggerMiddleware
 from server.app.error_handlers import register_error_handlers
@@ -66,6 +67,7 @@ app.include_router(social.router)
 app.include_router(twitter_oauth.router)
 app.include_router(instagram_oauth.router)
 app.include_router(advanced_router)
+app.include_router(media_api.router)
 
 @app.get("/")
 async def root():

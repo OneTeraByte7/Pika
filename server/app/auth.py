@@ -67,9 +67,15 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
         if user_id is None:
             raise credentials_exception
         
-        # Fetch user from MongoDB
+        # Fetch user from MongoDB. The token `sub` contains the user id as a string;
+        # convert to ObjectId for lookup (required for Atlas / ObjectId-backed _id fields).
         db = get_db()
-        user_doc = await db[COLLECTIONS["users"]].find_one({"_id": user_id})
+        try:
+            oid = ObjectId(user_id)
+        except Exception:
+            raise credentials_exception
+
+        user_doc = await db[COLLECTIONS["users"]].find_one({"_id": oid})
         
         if user_doc is None:
             raise credentials_exception

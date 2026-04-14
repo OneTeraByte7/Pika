@@ -23,6 +23,11 @@ export default function Navbar() {
     { label: 'Visual Creator', href: '/visual-creator' },
   ];
 
+  // Auth state from store
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const logout = useAuthStore((s) => s.logout);
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isScrolled

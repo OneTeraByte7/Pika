@@ -27,9 +27,24 @@ class MongoDB:
     
     @classmethod
     def get_database(cls):
-        """Get database instance"""
+        """Get database instance.
+
+        Prefer the default database from the MongoDB connection string (Atlas SRV URIs).
+        Fall back to the local `pika_db` attribute for local development.
+        """
         if cls.client is None:
             raise Exception("Database not connected")
+
+        # If a database name was provided in the connection string (common for Atlas),
+        # return the default database. Otherwise fall back to `pika_db`.
+        try:
+            db = cls.client.get_default_database()
+            if db is not None:
+                return db
+        except Exception:
+            # get_default_database can raise if no default DB in URI; ignore and fallback
+            pass
+
         return cls.client.pika_db
 
 # Database instance

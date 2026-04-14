@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Menu, X, Rocket, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { useAuthStore } from '../store';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -79,6 +80,19 @@ export default function Navbar() {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/40 to-transparent transition-opacity duration-500" />
               </motion.button>
             </Link>
+
+            {/* Auth actions */}
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-white/70">{user?.username || user?.email}</span>
+                <button onClick={() => { logout(); window.location.href = '/'; }} className="px-4 py-2 bg-red-600 text-white rounded">Logout</button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link href="/login"><a className="text-sm text-white/70 hover:text-white">Login</a></Link>
+                <Link href="/register"><a className="px-4 py-2 bg-white text-black rounded text-sm font-bold">Sign up</a></Link>
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
             <button

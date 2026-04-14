@@ -1,24 +1,50 @@
 import { create } from 'zustand';
+import { authAPI } from '../services/api';
 
 export const useAuthStore = create((set) => ({
-    iser: null,
+    user: null,
     token: null,
     isAuthenticated: false,
 
-    setUser: (user) => set({ user, isAuthenticates: !!user}),
+    setUser: (user) => set({ user, isAuthenticated: !!user }),
     setToken: (token) => {
-        localStorage,setItem('token', token);
-        set({ token, isAuthenticated: true });
+        try {
+            if (token) {
+                localStorage.setItem('token', token);
+            } else {
+                localStorage.removeItem('token');
+            }
+        } catch (e) {
+            // ignore localStorage errors in SSR
+        }
+        set({ token, isAuthenticated: !!token });
     },
     logout: () => {
-        localStorage.removeItem('token');
-        set({user: null, token: null, isAuthenticated:false});
+        try {
+            localStorage.removeItem('token');
+        } catch (e) {}
+        set({ user: null, token: null, isAuthenticated: false });
     },
 
-    initialize: () => {
-        const token = localStorage.getItem('token');
-        if(token) {
-            set({ token, isAuthenticates: true});
+    initialize: async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            set({ token, isAuthenticated: true });
+
+            // Try to fetch the current user; if it fails, clear token
+            try {
+                const res = await authAPI.getMe();
+                const user = res.data;
+                set({ user });
+            } catch (err) {
+                // invalid token or expired
+                try { localStorage.removeItem('token'); } catch (e) {}
+                set({ user: null, token: null, isAuthenticated: false });
+            }
+        } catch (e) {
+            // ignore
         }
     },
 }));

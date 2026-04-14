@@ -94,8 +94,8 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link href="/login"><a className="text-sm text-white/70 hover:text-white">Login</a></Link>
-                <Link href="/register"><a className="px-4 py-2 bg-white text-black rounded text-sm font-bold">Sign up</a></Link>
+                <Link href="/login" className="text-sm text-white/70 hover:text-white">Login</Link>
+                <Link href="/register" className="px-4 py-2 bg-white text-black rounded text-sm font-bold">Sign up</Link>
               </div>
             )}
 

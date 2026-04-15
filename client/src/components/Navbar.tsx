@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Menu, X, Rocket, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore } from '../store';
+import { useRouter } from 'next/router';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -27,6 +28,9 @@ export default function Navbar() {
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const logout = useAuthStore((s) => s.logout);
+  const router = useRouter();
+  const pathname = router?.pathname || '';
+  const isLanding = pathname === '/' || pathname === '/landing';
 
   return (
     <nav
@@ -74,8 +78,9 @@ export default function Navbar() {
           <div className="flex items-center space-x-6">
             {/* (Dashboard link removed - moved into app More menu) */}
 
-            <Link href="/app">
-              <motion.button
+            {!isLanding && (
+              <Link href="/app">
+                <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-3 bg-white text-black text-sm font-black uppercase tracking-widest rounded-full hover:bg-electric-blue transition-all relative overflow-hidden group"
@@ -83,8 +88,9 @@ export default function Navbar() {
                 <span className="relative z-10">Get Started</span>
                 <div className="absolute inset-0 bg-white group-hover:bg-electric-blue transition-colors" />
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/40 to-transparent transition-opacity duration-500" />
-              </motion.button>
-            </Link>
+                </motion.button>
+              </Link>
+            )}
 
             {/* Auth actions */}
             {isAuthenticated ? (
@@ -139,13 +145,15 @@ export default function Navbar() {
                 </motion.a>
               ))}
 
-              <div className="pt-8 border-t border-white/10">
-                <Link href="/app" onClick={() => setIsMobileMenuOpen(false)}>
-                  <button className="w-full py-6 bg-vivid-purple text-white text-xl font-black uppercase tracking-widest rounded-3xl shadow-[0_0_30px_rgba(189,0,255,0.3)]">
-                    Get Started Now
-                  </button>
-                </Link>
-              </div>
+              {!isLanding && (
+                <div className="pt-8 border-t border-white/10">
+                  <Link href="/app" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="w-full py-6 bg-vivid-purple text-white text-xl font-black uppercase tracking-widest rounded-3xl shadow-[0_0_30px_rgba(189,0,255,0.3)]">
+                      Get Started Now
+                    </button>
+                  </Link>
+                </div>
+              )}
             </div>
           </motion.div>
         )}

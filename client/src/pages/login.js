@@ -20,7 +20,7 @@ export default function LoginPage() {
             if (!token) throw new Error('No token returned')
 
             setToken(token)
-            router.push('/social-dashboard')
+            router.push('/app')
         } catch (err) {
             setError(err.response?.data?.detail || err.message || 'Login failed')
         }
@@ -44,7 +44,7 @@ export default function LoginPage() {
 
                         <div>
                             <label className="text-xs text-white/70">Password</label>
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mt-2 p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40" placeholder="••••••••" required />
+                            <input maxLength={72} type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mt-2 p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40" placeholder="••••••••" required />
                         </div>
 
                         {error && <div className="text-red-400 text-sm">{error}</div>}

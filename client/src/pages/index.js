@@ -5,8 +5,17 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to landing page
-    router.push('/landing');
+    // If a token exists, go straight to the app; otherwise show landing page.
+    try {
+      const token = localStorage.getItem('token');
+      if (token && token !== 'null' && token !== 'undefined') {
+        router.replace('/app');
+      } else {
+        router.replace('/landing');
+      }
+    } catch (e) {
+      router.replace('/landing');
+    }
   }, [router]);
 
   return (

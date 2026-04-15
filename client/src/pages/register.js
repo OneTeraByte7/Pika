@@ -52,7 +52,7 @@ export default function RegisterPage() {
 
                         <div>
                             <label className="text-xs text-white/70">Password</label>
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mt-2 p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40" placeholder="Choose a strong password" required />
+                            <input maxLength={72} type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mt-2 p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40" placeholder="Choose a strong password" required />
                         </div>
 
                         {error && <div className="text-red-400 text-sm">{error}</div>}

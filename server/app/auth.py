@@ -11,7 +11,7 @@ from server.config.settings import settings
 from server.models.mongodb import get_db, COLLECTIONS
 router = APIRouter(prefix = "/auth", tags = ["authentication"])
 
-pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
+pwd_context = CryptContext(schemes = ["bcrypt_sha256"], deprecated = "auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "/auth/login", auto_error=False)
 
 # Demo user (used when DEBUG and no token provided). Create once so the id is stable across requests.
@@ -22,7 +22,11 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    try:
+        return pwd_context.hash(password)
+    except ValueError:
+        # Re-raise so callers can turn this into a clean HTTP error
+        raise
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
@@ -104,7 +108,21 @@ async def register(user: UserCreate):
         )
     
     # Create new user
-    hashed_password = get_password_hash(user.password)
+    # Enforce a maximum password length in bytes to avoid bcrypt backend errors.
+    if len(user.password.encode('utf-8')) > 72:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password too long; maximum 72 bytes. Shorten your password and try again.",
+        )
+
+    try:
+        hashed_password = get_password_hash(user.password)
+    except ValueError as e:
+        # bcrypt underlying implementation can raise on long inputs; report a clear 400
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e) or "Invalid password",
+        )
     new_user = User(
         email=user.email,
         username=user.username,

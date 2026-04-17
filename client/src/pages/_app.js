@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import { useEffect } from 'react';
 import { useAuthStore } from '../store';
-import { ImageErrorBoundary } from '../components/ImageWithFallback';
+import { ImageErrorBoundary } from '../components/media/ImageWithFallback';
 
 function MyApp({ Component, pageProps }) {
   const initialize = useAuthStore((state) => state.initialize);

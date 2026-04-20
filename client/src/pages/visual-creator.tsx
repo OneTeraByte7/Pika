@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { Toaster } from 'react-hot-toast';
-import VisualContentCreator from '../components/VisualContentCreator';
+import VisualContentCreator from '../components/features/VisualContentCreator';
 
 export default function VisualCreatorPage() {
   return (

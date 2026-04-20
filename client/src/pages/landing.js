@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import { Toaster } from 'react-hot-toast';
-import Navbar from '../components/Navbar';
-import TwitterBanner from '../components/TwitterBanner';
-import Hero from '../components/Hero';
-import Features from '../components/Features';
-import HowItWorks from '../components/HowItWorks';
-import Pricing from '../components/Pricing';
-import Footer from '../components/Footer';
+import Navbar from '../components/ui/Navbar';
+import TwitterBanner from '../components/social/twitter/TwitterBanner';
+import Hero from '../components/ui/Hero';
+import Features from '../components/features/Features';
+import HowItWorks from '../components/ui/HowItWorks';
+import Pricing from '../components/misc/Pricing';
+import Footer from '../components/ui/Footer';
 
 export default function Landing() {
   return (

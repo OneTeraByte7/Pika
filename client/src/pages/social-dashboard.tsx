@@ -1,9 +1,9 @@
 // Social Media Dashboard Page
 import React, { useState } from 'react';
-import { TwitterConnectButton } from '../components/TwitterConnectButton';
-import InstagramConnectButton from '../components/InstagramConnectButton';
-import { ConnectedAccounts } from '../components/ConnectedAccounts';
-import { TweetComposer } from '../components/TweetComposer';
+import TwitterConnectButton from '../components/social/twitter/TwitterConnectButton';
+import InstagramConnectButton from '../components/social/instagram/InstagramConnectButton';
+import ConnectedAccounts from '../components/social/ConnectedAccounts';
+import TweetComposer from '../components/social/twitter/TweetComposer';
 import { Twitter, Settings, BarChart3 } from 'lucide-react';
 
 export default function SocialDashboard() {

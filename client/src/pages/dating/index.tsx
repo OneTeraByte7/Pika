@@ -1,4 +1,4 @@
-import DatingProfileCard from '../../components/DatingProfileCard';
+import DatingProfileCard from '../../components/dating/DatingProfileCard';
 
 const sampleProfiles = [
   { id: '1', name: 'Alex', age: 28, bio: 'Loves hiking and coffee.', image: '' },

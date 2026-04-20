@@ -4,17 +4,17 @@ import Head from 'next/head';
 import { Sparkles, Home, MessageSquare, PlusCircle, BarChart3, User, Settings, Menu, Calendar, Bell, Lightbulb, Download, Activity, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
-import VoiceInterface from '../components/VoiceInterface';
-import ResponseDisplay from '../components/ResponseDisplay';
-import BriefingCard from '../components/BriefingCard';
-import Dashboard from '../components/Dashboard';
-import AnalyticsDashboard from '../components/AnalyticsDashboard';
-import ContentScheduler from '../components/ContentScheduler';
-import NotificationsCenter from '../components/NotificationsCenter';
-import RecommendationsPage from '../components/RecommendationsPage';
-import DataExport from '../components/DataExport';
-import EngagementTracker from '../components/EngagementTracker';
-import SentimentAnalysis from '../components/SentimentAnalysis';
+import VoiceInterface from '../components/voice/VoiceInterface';
+import ResponseDisplay from '../components/ui/ResponseDisplay';
+import BriefingCard from '../components/misc/BriefingCard';
+import Dashboard from '../components/features/Dashboard';
+import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
+import ContentScheduler from '../components/features/ContentScheduler';
+import NotificationsCenter from '../components/misc/NotificationsCenter';
+import RecommendationsPage from '../components/features/RecommendationsPage';
+import DataExport from '../components/analytics/DataExport';
+import EngagementTracker from '../components/analytics/EngagementTracker';
+import SentimentAnalysis from '../components/analytics/SentimentAnalysis';
 import { usePikaStore } from '../store';
 
 export default function App() {

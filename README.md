@@ -191,4 +191,4 @@ MIT License
 
 ## 👥 Contact
 
-For questions and support, please open an issue on GitHub.
+For questions and support, Please open an issue on GitHub.

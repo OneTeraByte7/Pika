@@ -12,7 +12,7 @@ import {
     Hash,
     Zap
 } from 'lucide-react';
-import { analyticsAPI } from '../services/advanced';
+import { analyticsAPI } from '../../services/advanced.js';
 import toast from 'react-hot-toast';
 
 export default function AnalyticsDashboard() {

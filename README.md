@@ -29,7 +29,7 @@ pika-ai/
 │   └── public/            # Static assets
 ├── deployment/            # Render deployment configs
 └── tests/                 # Test files
-
+#done
 ```
 
 ## 🚀 Features
@@ -191,4 +191,4 @@ MIT License
 
 ## 👥 Contact
 
-For questions and support, please open an issue on GitHub.
+For questions and support, Please open an issue on GitHub.

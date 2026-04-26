@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, Component, ReactNode } from 'react';
 
 export default function ImageWithFallback({ src, fallback, alt, className = '' }: { src: string; fallback?: string; alt?: string; className?: string }) {
     const [error, setError] = useState(false);
@@ -12,4 +12,15 @@ export default function ImageWithFallback({ src, fallback, alt, className = '' }
             )}
         </div>
     );
+}
+
+interface ErrorBoundaryState { hasError: boolean }
+export class ImageErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundaryState> {
+    constructor(props: { children: ReactNode }) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    static getDerivedStateFromError() { return { hasError: false }; }
+    componentDidCatch(error: Error) { console.warn('ImageErrorBoundary caught:', error); }
+    render() { return this.props.children; }
 }

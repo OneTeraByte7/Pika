@@ -8,7 +8,7 @@ import {
     Check,
     Loader
 } from 'lucide-react';
-import { exportAPI } from '../services/advanced';
+import { exportAPI } from '../../services/advanced';
 import toast from 'react-hot-toast';
 
 export default function DataExport() {

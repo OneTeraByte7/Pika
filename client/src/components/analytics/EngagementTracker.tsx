@@ -10,7 +10,7 @@ import {
     Calendar,
     Target
 } from 'lucide-react';
-import { engagementAPI } from '../services/advanced';
+import { engagementAPI } from '../../services/advanced';
 
 export default function EngagementTracker() {
     const [timeRange, setTimeRange] = useState('30d');

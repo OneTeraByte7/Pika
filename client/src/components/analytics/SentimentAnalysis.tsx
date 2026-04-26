@@ -14,7 +14,7 @@ import {
     Sparkles,
     FileText
 } from 'lucide-react';
-import { sentimentAPI } from '../services/advanced';
+import { sentimentAPI } from '../../services/advanced';
 import toast from 'react-hot-toast';
 
 export default function SentimentAnalysis() {

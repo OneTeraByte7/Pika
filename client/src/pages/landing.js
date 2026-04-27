@@ -6,7 +6,7 @@ import Hero from '../components/ui/Hero';
 import Features from '../components/features/Features';
 import HowItWorks from '../components/ui/HowItWorks';
 import Pricing from '../components/misc/Pricing';
-import Footer from '../components/ui/Footer';
+import Footer from '../components/Footer';
 
 export default function Landing() {
   return (

@@ -1,7 +1,7 @@
 // Twitter OAuth Hook
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { twitterService } from '../services/twitterService';
+import { twitterService } from './twitterService';
 import toast from 'react-hot-toast';
 
 export const useTwitterAuth = () => {

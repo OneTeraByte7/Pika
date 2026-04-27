@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { Sparkles, Home, MessageSquare, PlusCircle, BarChart3, User, Settings, Menu, Calendar, Bell, Lightbulb, Download, Activity, Brain } from 'lucide-react';
+import { Sparkles, Home, MessageSquare, PlusCircle, BarChart3, User, Settings, Menu, Calendar, Bell, Lightbulb, Download, Activity, Brain, Palette, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import VoiceInterface from '../components/voice/VoiceInterface';
@@ -40,6 +40,8 @@ export default function App() {
     { id: 'export', label: 'Export Data', icon: Download },
     { id: 'dms', label: 'DMs', icon: MessageSquare },
     { id: 'post', label: 'Post', icon: PlusCircle },
+    { id: 'visual-creator', label: 'Visual Creator', icon: Palette },
+    { id: 'dating', label: 'Dating', icon: Heart },
   ];
 
   const renderContent = () => {
@@ -180,9 +182,14 @@ export default function App() {
                             <button
                               key={item.id}
                               onClick={() => {
-                                // If this item is the social dashboard, navigate to the page.
-                                if (item.id === 'social-dashboard') {
-                                  router.push('/social-dashboard');
+                                // Items that navigate to their own full page
+                                const pageRoutes = {
+                                  'social-dashboard': '/social-dashboard',
+                                  'visual-creator': '/visual-creator',
+                                  'dating': '/dating',
+                                };
+                                if (pageRoutes[item.id]) {
+                                  router.push(pageRoutes[item.id]);
                                   setShowMoreMenu(false);
                                   return;
                                 }

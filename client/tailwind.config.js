@@ -40,6 +40,7 @@ module.exports = {
         'neon-glow': 'linear-gradient(135deg, #bd00ff 0%, #00f2ff 100%)',
         'cyber-gradient': 'linear-gradient(135deg, #00f2ff 0%, #00ff88 100%)',
         'pink-glow': 'linear-gradient(135deg, #ff00e5 0%, #bd00ff 100%)',
+        'gradient-pika': 'linear-gradient(135deg, #bd00ff 0%, #00f2ff 100%)',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -66,6 +67,7 @@ module.exports = {
         'neon-purple': '0 0 10px #bd00ff, 0 0 20px #bd00ff66',
         'neon-pink': '0 0 10px #ff00e5, 0 0 20px #ff00e566',
         'neon-green': '0 0 10px #00ff88, 0 0 20px #00ff8866',
+        'neon-white': '0 0 10px #ffffff, 0 0 20px #ffffff66',
       }
     },
   },

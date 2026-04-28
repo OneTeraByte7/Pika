@@ -72,5 +72,13 @@ COLLECTIONS = {
     "dms": "dms",
     "briefings": "briefings",
     "voice_queries": "voice_queries",
-    "comments": "comments"
+    "comments": "comments",
+    # Dating collections
+    "dating_profiles": "dating_profiles",
+    "dating_swipes": "dating_swipes",
+    "dating_matches": "dating_matches",
+    "dating_likes": "dating_likes",
+    "user_preferences": "user_preferences",
+    "blocked_users": "blocked_users",
+    "reports": "reports",
 }

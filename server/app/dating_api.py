@@ -6,13 +6,17 @@ from server.models.dating import (
     SwipeCreate, SwipeResponse,
     MatchResponse, LikeResponse,
     RecommendationResponse, BlockedUserResponse,
-    ReportCreate, ReportResponse
+    ReportCreate, ReportResponse,
+    MessageCreate, MessageResponse,
+    ConversationResponse, ConversationDetailResponse,
+    ConversationListResponse
 )
 from server.models.mongodb import get_db
 from server.services.dating_services import (
     ProfileService, MatchingService, InteractionService
 )
 from server.services.dating_recommendations import RecommendationEngine
+from server.services.dating_messaging import MessagingService
 from bson import ObjectId
 from datetime import datetime
 
@@ -33,6 +37,10 @@ async def get_interaction_service(db=Depends(get_db)):
 
 async def get_recommendation_engine(db=Depends(get_db)):
     return RecommendationEngine(db)
+
+
+async def get_messaging_service(db=Depends(get_db)):
+    return MessagingService(db)
 
 
 # Profile Management Endpoints

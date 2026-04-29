@@ -222,3 +222,67 @@ class ReportResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class MessageCreate(BaseModel):
+    to_profile_id: str
+    content: str = Field(..., min_length=1, max_length=1000)
+    message_type: str = "text"  # text, image, emoji
+
+
+class MessageResponse(BaseModel):
+    id: str
+    from_profile_id: str
+    to_profile_id: str
+    content: str
+    message_type: str
+    is_read: bool = False
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ConversationResponse(BaseModel):
+    id: str
+    profile_ids: List[str]  # Two profile IDs
+    last_message: Optional[str] = None
+    last_message_timestamp: Optional[datetime] = None
+    unread_count: int = 0
+    message_count: int = 0
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ConversationDetailResponse(BaseModel):
+    conversation: ConversationResponse
+    messages: List[MessageResponse]
+
+    class Config:
+        from_attributes = True
+
+
+class MessageBatchResponse(BaseModel):
+    total: int
+    unread: int
+    messages: List[MessageResponse]
+
+    class Config:
+        from_attributes = True
+
+
+class TypingIndicatorCreate(BaseModel):
+    to_profile_id: str
+
+
+class ConversationListResponse(BaseModel):
+    total_conversations: int
+    total_unread: int
+    conversations: List[ConversationResponse]
+
+    class Config:
+        from_attributes = True

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, WebSocket, WebSocketDisconnect
 from typing import List, Optional
 from server.models.dating import (
     DatingProfileCreate, DatingProfileResponse,
@@ -17,8 +17,10 @@ from server.services.dating_services import (
 )
 from server.services.dating_recommendations import RecommendationEngine
 from server.services.dating_messaging import MessagingService
+from server.services.websocket_manager import manager
 from bson import ObjectId
 from datetime import datetime
+import json
 
 router = APIRouter(prefix="/api/dating", tags=["dating"])
 
@@ -353,3 +355,280 @@ async def get_mutual_interests(
         return {"profile_id": profile_id, "other_profile_id": other_profile_id, "shared_interests": interests}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# Messaging Endpoints
+@router.post("/messages", response_model=MessageResponse)
+async def send_message(
+    message_data: MessageCreate,
+    from_profile_id: str,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Send a direct message to another profile."""
+    try:
+        return await messaging_service.send_message(
+            from_profile_id=from_profile_id,
+            to_profile_id=message_data.to_profile_id,
+            content=message_data.content,
+            message_type=message_data.message_type
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=403, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/messages/{profile_id}/{other_profile_id}", response_model=List[MessageResponse])
+async def get_messages(
+    profile_id: str,
+    other_profile_id: str,
+    limit: int = 50,
+    skip: int = 0,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Get message history between two profiles."""
+    try:
+        messages = await messaging_service.get_messages(
+            profile_id=profile_id,
+            other_profile_id=other_profile_id,
+            limit=limit,
+            skip=skip
+        )
+        return messages
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/messages/{message_id}/read")
+async def mark_message_as_read(
+    message_id: str,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Mark a message as read."""
+    try:
+        success = await messaging_service.mark_as_read(message_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Message not found")
+        return {"message": "Message marked as read"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/conversations/{profile_id}/{other_profile_id}/read")
+async def mark_conversation_as_read(
+    profile_id: str,
+    other_profile_id: str,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Mark all messages in a conversation as read."""
+    try:
+        success = await messaging_service.mark_conversation_as_read(profile_id, other_profile_id)
+        if not success:
+            raise HTTPException(status_code=400, detail="Failed to mark conversation as read")
+        return {"message": "Conversation marked as read"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/conversations/{profile_id}/{other_profile_id}", response_model=ConversationResponse)
+async def get_conversation(
+    profile_id: str,
+    other_profile_id: str,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Get a specific conversation."""
+    try:
+        conversation = await messaging_service.get_conversation(profile_id, other_profile_id)
+        if not conversation:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        return conversation
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/conversations/{profile_id}", response_model=ConversationListResponse)
+async def get_conversations(
+    profile_id: str,
+    limit: int = 50,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Get all conversations for a profile."""
+    try:
+        return await messaging_service.get_conversations(profile_id, limit=limit)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/messages/{profile_id}/unread-count")
+async def get_unread_count(
+    profile_id: str,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Get total unread message count for a profile."""
+    try:
+        count = await messaging_service.get_unread_count(profile_id)
+        return {"profile_id": profile_id, "unread_count": count}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.delete("/messages/{message_id}")
+async def delete_message(
+    message_id: str,
+    profile_id: str,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Delete a message (soft delete)."""
+    try:
+        success = await messaging_service.delete_message(message_id, profile_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Message not found or not authorized")
+        return {"message": "Message deleted"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/conversations/{profile_id}/search")
+async def search_conversations(
+    profile_id: str,
+    query: str,
+    limit: int = 20,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Search messages in conversations."""
+    try:
+        if not query or len(query.strip()) == 0:
+            raise HTTPException(status_code=400, detail="Search query is required")
+        conversations = await messaging_service.search_conversations(
+            profile_id=profile_id,
+            query=query,
+            limit=limit
+        )
+        return {"results": conversations, "total": len(conversations)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.delete("/conversations/{profile_id}/{other_profile_id}")
+async def delete_conversation(
+    profile_id: str,
+    other_profile_id: str,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Delete a conversation for a profile."""
+    try:
+        success = await messaging_service.delete_conversation(profile_id, other_profile_id)
+        if not success:
+            raise HTTPException(status_code=400, detail="Failed to delete conversation")
+        return {"message": "Conversation deleted"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/conversations/{profile_id}/preview")
+async def get_conversation_preview(
+    profile_id: str,
+    message_count: int = 3,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Get preview of all conversations with latest messages."""
+    try:
+        return await messaging_service.get_conversation_preview(profile_id, message_count)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/conversations/{profile_id}/{other_profile_id}/export")
+async def export_conversation(
+    profile_id: str,
+    other_profile_id: str,
+    messaging_service: MessagingService = Depends(get_messaging_service)
+):
+    """Export a conversation as text."""
+    try:
+        export_data = await messaging_service.export_conversation(profile_id, other_profile_id)
+        return {"export": export_data}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# WebSocket Endpoints
+@router.websocket("/ws/messages/{profile_id}/{other_profile_id}")
+async def websocket_messages(
+    websocket: WebSocket,
+    profile_id: str,
+    other_profile_id: str,
+    db = Depends(get_db)
+):
+    """WebSocket endpoint for real-time messaging."""
+    conversation_key = tuple(sorted([profile_id, other_profile_id]))
+    await manager.connect(profile_id, str(conversation_key), websocket)
+    
+    # Notify user is online
+    await manager.broadcast_user_online(profile_id, other_profile_id, True)
+    
+    try:
+        messaging_service = MessagingService(db)
+        
+        while True:
+            data = await websocket.receive_text()
+            message_data = json.loads(data)
+            
+            if message_data.get("type") == "message":
+                # Send message
+                msg = await messaging_service.send_message(
+                    from_profile_id=profile_id,
+                    to_profile_id=other_profile_id,
+                    content=message_data.get("content", ""),
+                    message_type=message_data.get("message_type", "text")
+                )
+                
+                # Broadcast to recipient
+                await manager.broadcast_message(
+                    profile_id,
+                    other_profile_id,
+                    {
+                        "id": msg.id,
+                        "content": msg.content,
+                        "message_type": msg.message_type,
+                        "created_at": msg.created_at.isoformat()
+                    }
+                )
+            
+            elif message_data.get("type") == "typing":
+                # Broadcast typing indicator
+                await manager.broadcast_typing(
+                    profile_id,
+                    other_profile_id,
+                    message_data.get("is_typing", False)
+                )
+            
+            elif message_data.get("type") == "read_receipt":
+                # Mark message as read
+                message_id = message_data.get("message_id")
+                if message_id:
+                    await messaging_service.mark_as_read(message_id)
+                    await manager.broadcast_read_receipt(
+                        profile_id,
+                        other_profile_id,
+                        message_id
+                    )
+    
+    except WebSocketDisconnect:
+        manager.disconnect(profile_id, str(conversation_key))
+        # Notify user is offline
+        await manager.broadcast_user_online(profile_id, other_profile_id, False)
+    
+    except Exception as e:
+        manager.disconnect(profile_id, str(conversation_key))
+        await websocket.close(code=1000, reason=str(e))
